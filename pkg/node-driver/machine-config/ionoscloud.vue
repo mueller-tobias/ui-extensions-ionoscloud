@@ -4,10 +4,12 @@ import { Banner } from '@components/Banner';
 import CreateEditView from '@shell/mixins/create-edit-view';
 import LabeledSelect from '@shell/components/form/LabeledSelect';
 import { LabeledInput } from '@components/Form/LabeledInput';
+import { TextArea } from '@components/Form/TextArea';
 import { stringify } from '@shell/utils/error';
 import { _VIEW } from '@shell/config/query-params';
 import FileSelector from '../components/FileSelector';
 
+import { LabeledTooltip } from '@rancher/components';
 
 function initLocation() {
   return {
@@ -113,10 +115,56 @@ function initVolumeZone() {
   };
 }
 
+function initCpuFamily() {
+  return {
+    options:  [
+      {
+        label: 'Intel SKYLAKE (Europe)',
+        value: {'value': 'INTEL_SKYLAKE', 'name': 'Intel SKYLAKE (Europe)'}
+      },
+      {
+        label: 'AMD OPTERON (USA)',
+        value: {'value': 'AMD_OPTERON', 'name': 'AMD OPTERON (USA)'}
+      },
+      {
+        label: 'Intel XEON (USA)',
+        value: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'}
+      },
+    ],
+    selected: {'value': 'INTEL_SKYLAKE', 'name': 'Intel SKYLAKE (Europe)'},
+    busy:     false,
+    enabled:  false,
+  };
+}
+
+function initDiskType() {
+  return {
+    options:  [
+      {
+        label: 'HDD',
+        value: {'value': 'HDD', 'name': 'HDD'}
+      },
+      {
+        label: 'SSD',
+        value: {'value': 'SSD', 'name': 'SSD'}
+      },
+    ],
+    selected: {'value': 'HDD', 'name': 'HDD'},
+    busy:     false,
+    enabled:  false,
+  };
+}
+
 export default {
   components: {
-    Banner, FileSelector, Loading, LabeledInput, LabeledSelect
-  },
+    Banner,
+    FileSelector,
+    Loading,
+    LabeledInput,
+    LabeledSelect,
+    TextArea,
+    LabeledTooltip
+},
 
   mixins: [CreateEditView],
 
@@ -178,10 +226,14 @@ export default {
       serverType:          initServerType(),
       serverZone:          initServerZone(),
       volumeZone:          initVolumeZone(),
-      sshUser:             this.value?.sshUser || 'root',
-      privateKeyFile:      this.value?.privateKeyFile || '',
-      filename:            this.value?.privateKeyFile ? 'Private Key Provided' : '',
-      privateKeyFieldType: 'password',
+      cpuFamily:           initCpuFamily(),
+      diskType:            initDiskType(),
+      cores:               this.value?.cores || '2',
+      ram:                 this.value?.ram || '2048',
+      diskSize:            this.value?.diskSize || '50',
+      image:               this.value?.image || 'ubuntu:20.04',
+      imagePassword:       this.value?.imagePassword,
+      userData:            this.value?.userData,
       errors:              null,
     };
   },
@@ -200,6 +252,8 @@ export default {
       this.fakeSelectOptions(this.ServerType, this.value?.serverType);
       this.fakeSelectOptions(this.ServerZone, this.value?.serverZone);
       this.fakeSelectOptions(this.VolumeZone, this.value?.volumeZone);
+      this.fakeSelectOptions(this.CpuFamily, this.value?.cpuFamily);
+      this.fakeSelectOptions(this.DiskType, this.value?.diskType);
     },
 
     fakeSelectOptions(list, value) {
@@ -236,6 +290,14 @@ export default {
       this.value.serverType = this.serverType.selected?.name;
       this.value.serverZone = this.serverZone.selected?.name;
       this.value.volumeZone = this.volumeZone.selected?.name;
+      this.value.cpuFamily = this.cpuFamily.selected?.name;
+      this.value.diskType = this.diskType.selected?.name;
+      this.value.cores = this.cores;
+      this.value.ram = this.ram;
+      this.value.diskSize = this.diskSize;
+      this.value.image = this.image;
+      this.value.imagePassword = this.imagePassword;
+      this.value.userData = this.userData;
     },
 
     test() {
@@ -306,23 +368,103 @@ export default {
           />
         </div>
       </div>
+
+      <div class="row mt-10">
+        <div class="col span-3">
+          <LabeledSelect
+            v-model="cpuFamily.selected"
+            label="CpuFamily"
+            :options="cpuFamily.options"
+            :loading="cpuFamily.busy"
+            :searchable="false"
+          />
+        </div>
+        <div class="col span-3">
+          <LabeledInput
+            v-model="cores"
+            :mode="mode"
+            :disabled="busy"
+            :required="true"
+            label="CPU Core Count"
+          />
+        </div>
+        <div class="col span-6">
+          <LabeledInput
+            v-model="ram"
+            :mode="mode"
+            :disabled="busy"
+            :required="true"
+            label="RAM size (in MiB)"
+          />
+          <p class="help-block">Must be a multiple of 256</p>
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-6">
+          <LabeledInput
+            v-model="diskSize"
+            :mode="mode"
+            :disabled="busy"
+            :required="true"
+            label="Disk size (in GB)"
+          />
+        </div>
+        <div class="col span-6">
+          <LabeledSelect
+            v-model="diskType.selected"
+            label="DiskType"
+            :options="diskType.options"
+            :loading="diskType.busy"
+            :searchable="false"
+            :required="true"
+          />
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-6">
+          <LabeledInput
+            v-model="image"
+            :mode="mode"
+            :disabled="busy"
+            :required="true"
+            label="Image Alias or ID"
+          />
+          <p class="help-block">You can use <a href="https://docs.ionos.com/cli-ionosctl" target="_blank" rel="noopener noreferrer">ionosctl image list [-F name=operatingSystem]</a></p>
+        </div>
+        <div class="col span-6">
+          <LabeledInput
+            v-model="imagePassword"
+            :mode="mode"
+            :disabled="busy"
+            :required="true"
+            label="Image Password"
+            type="password"
+          />
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-12">
+          <label class="acc-label">Cloud init configuration.</label>
+          <TextArea
+            v-model="userData"
+            :mode="mode"
+            :disabled="busy"
+            @input="userData=$event.target.value;"
+          ></TextArea>
+          <p class="help-block">Optional. <a href="https://cloudinit.readthedocs.io/en/latest/topics/examples.html" target="_blank" rel="noopener noreferrer">Cloud-init Documentation</a>.</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <style scoped lang="scss">
-  .file-button {
-    align-items: center;
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    display: flex;
-
-    > .file-selector {
-      height: calc($input-height - 2px);
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
+  .help-block {
+    margin-top: .5em;
+    font-size: .8em;
+    margin-left: 1em;
   }
 
   .ionoscloud-config {
