@@ -4,6 +4,8 @@ import { Banner } from '@components/Banner';
 import CreateEditView from '@shell/mixins/create-edit-view';
 import LabeledSelect from '@shell/components/form/LabeledSelect';
 import { LabeledInput } from '@components/Form/LabeledInput';
+import { Checkbox } from '@components/Form/Checkbox';
+import { StringList } from '@components/StringList';
 import { TextArea } from '@components/Form/TextArea';
 import { stringify } from '@shell/utils/error';
 import { _VIEW } from '@shell/config/query-params';
@@ -155,11 +157,21 @@ function initDiskType() {
   };
 }
 
+function validateIp(ip) {
+  if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)) {
+    return true;
+  }
+  return false;
+}
+
+
 export default {
   components: {
     Banner,
     FileSelector,
     Loading,
+    Checkbox,
+    StringList,
     LabeledInput,
     LabeledSelect,
     TextArea,
@@ -234,6 +246,15 @@ export default {
       image:               this.value?.image || 'ubuntu:20.04',
       imagePassword:       this.value?.imagePassword,
       userData:            this.value?.userData,
+      sshUser:             this.value?.sshUser || 'root',
+      sshInUserData:       this.value?.sshInUserData || false,
+      datacenterId:        this.value?.datacenterId,
+      datacenterName:      this.value?.datacenterName || 'docker-machine-data-center',
+      lanId:               this.value?.lanId,
+      lanName:             this.value?.lanName || 'docker-machine-lan',
+      privateLan:          this.value?.privateLan || false,
+      nicDhcp:             this.value?.nicDhcp || false,
+      nicIps:              this.value?.nicIps || [],
       errors:              null,
     };
   },
@@ -271,6 +292,17 @@ export default {
       list.selected = value;
     },
 
+    onChangeNicIps(event) {
+      for (let ip of event) {
+        if (!validateIp(ip)) {
+          alert("You have entered an invalid IP address!");
+          return;
+        }
+      }
+
+      this.nicIps = event;
+    },
+
     onPrivateKeyFileSelected(v) {
       this.filename = v.file.name;
       this.privateKeyFile = v.data;
@@ -298,6 +330,15 @@ export default {
       this.value.image = this.image;
       this.value.imagePassword = this.imagePassword;
       this.value.userData = this.userData;
+      this.value.sshUser = this.sshUser;
+      this.value.sshInUserData = this.sshInUserData;
+      this.value.datacenterId = this.datacenterId;
+      this.value.datacenterName = this.datacenterName;
+      this.value.lanId = this.lanId;
+      this.value.lanName = this.lanName;
+      this.value.privateLan = this.privateLan;
+      this.value.nicDhcp = this.nicDhcp;
+      this.value.nicIps = this.nicIps;
     },
 
     test() {
@@ -455,6 +496,101 @@ export default {
             @input="userData=$event.target.value;"
           ></TextArea>
           <p class="help-block">Optional. <a href="https://cloudinit.readthedocs.io/en/latest/topics/examples.html" target="_blank" rel="noopener noreferrer">Cloud-init Documentation</a>.</p>
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-4">
+          <LabeledInput
+            v-model="sshUser"
+            :mode="mode"
+            :disabled="busy"
+            label="SSH User"
+          />
+          <p class="help-block">Optional. User to connect to via SSH.</p>
+        </div>
+        <div class="col span-4">
+          <Checkbox
+            label="Send SSH in user data."
+            v-model="sshInUserData"
+            :mode="mode"
+            :disabled="busy"
+          />
+          <p class="help-block">Should the driver only add the SSH info in the user data? (required for custom images).</p>
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-4">
+          <LabeledInput
+            v-model="datacenterId"
+            :mode="mode"
+            :disabled="busy"
+            label="Datacenter ID"
+          />
+          <p class="help-block">Optional, UUID-4 format. If you want to use an existing IONOS Datacenter to host this VM, you can provide its ID here.</p>
+        </div>
+        <div class="col span-4">
+          <LabeledInput
+            v-model="datacenterName"
+            :mode="mode"
+            :disabled="busy"
+            label="Datacenter Name"
+          />
+          <p class="help-block">String. If you want to use an existing IONOS Datacenter to host this VM, you can change the name here. Please note that if the ID is set it will the prioritized.</p>
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-4">
+          <LabeledInput
+            v-model="lanId"
+            :mode="mode"
+            :disabled="busy"
+            label="LAN ID"
+          />
+          <p class="help-block">Optional, integer. The LAN the VM will attach to. If blank, a default LAN will be created. Overrides "Private LAN" setting.</p>
+        </div>
+        <div class="col span-4">
+          <LabeledInput
+            v-model="lanName"
+            :mode="mode"
+            :disabled="busy"
+            label="LAN Name"
+          />
+          <p class="help-block">String. If you want to use an existing IONOS LAN, you can change the name here. Please note that if the ID is set it will the prioritized.</p>
+        </div>
+        <div class="col span-4">
+          <Checkbox
+            label="Make Default LAN Private"
+            v-model="privateLan"
+            :mode="mode"
+            :disabled="busy"
+          />
+          <p class="help-block">If the default LAN does not exist, create a private LAN</p>
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-4">
+          <Checkbox
+            label="NIC DHCP"
+            v-model="nicDhcp"
+            :mode="mode"
+            :disabled="busy"
+          />
+          <p class="help-block">Set whether the created NIC should have dhcp set on or off</p>
+        </div>
+        <div class="col span-4">
+          <StringList
+            label="NIC Ips"
+            v-model="nicIps"
+            :items="nicIps"
+            :mode="mode"
+            :disabled="busy"
+            @change="onChangeNicIps($event)"
+          />
+          <p class="help-block">Optional. IPBlock reserved IPs. If not set, the driver will reserve an IPBlock automatically or let the API set a private IP if the LAN is private</p>
         </div>
       </div>
     </div>
