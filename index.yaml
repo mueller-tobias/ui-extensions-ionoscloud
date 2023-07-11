@@ -12,12 +12,12 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-07-10T14:41:14.717669063Z"
+    created: "2023-07-11T15:10:49.306709274Z"
     description: Node driver UI for ionoscloud
-    digest: 3a19ddf7a192bd587b7ee4ecbe3d0859b465925817f49ec0393bb56cf72c34ba
+    digest: f3fb55264fa518d5ba1522083db4c749c6a5c83e6abd941a5c20057bf25f195e
     name: ionoscloud
     type: application
     urls:
     - assets/node-driver/ionoscloud-1.0.0.tgz
     version: 1.0.0
-generated: "2023-07-10T14:41:14.717113658Z"
+generated: "2023-07-11T15:10:49.305796483Z"
