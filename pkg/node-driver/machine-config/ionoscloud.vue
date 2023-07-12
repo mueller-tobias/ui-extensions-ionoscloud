@@ -91,6 +91,48 @@ function initServerZone() {
   };
 }
 
+function initTemplate() {
+  return {
+    options:  [
+      {
+        label: 'XS',
+        value: {'value': 'CUBES XS', 'name': 'XS'}
+      },
+      {
+        label: 'S',
+        value: {'value': 'CUBES S', 'name': 'S'}
+      },
+      {
+        label: 'M',
+        value: {'value': 'CUBES M', 'name': 'M'}
+      },
+      {
+        label: 'L',
+        value: {'value': 'CUBES L', 'name': 'L'}
+      },
+      {
+        label: 'XL',
+        value: {'value': 'CUBES XL', 'name': 'XL'}
+      },
+      {
+        label: 'XXL',
+        value: {'value': 'CUBES XXL', 'name': 'XXL'}
+      },
+      {
+        label: '3XL',
+        value: {'value': 'CUBES 3XL', 'name': '3XL'}
+      },
+      {
+        label: '4XL',
+        value: {'value': 'CUBES 4XL', 'name': '4XL'}
+      },
+    ],
+    selected: {'value': 'CUBES XS', 'name': 'XS'},
+    busy:     false,
+    enabled:  false,
+  };
+}
+
 function initVolumeZone() {
   return {
     options:  [
@@ -229,33 +271,41 @@ export default {
 
   data() {
     return {
-      authenticating:      false,
-      ready:               false,
-      os:                  null,
-      password:            null,
-      havePassword:        false,
-      location:            initLocation(),
-      serverType:          initServerType(),
-      serverZone:          initServerZone(),
-      volumeZone:          initVolumeZone(),
-      cpuFamily:           initCpuFamily(),
-      diskType:            initDiskType(),
-      cores:               this.value?.cores || '2',
-      ram:                 this.value?.ram || '2048',
-      diskSize:            this.value?.diskSize || '50',
-      image:               this.value?.image || 'ubuntu:20.04',
-      imagePassword:       this.value?.imagePassword,
-      userData:            this.value?.userData,
-      sshUser:             this.value?.sshUser || 'root',
-      sshInUserData:       this.value?.sshInUserData || false,
-      datacenterId:        this.value?.datacenterId,
-      datacenterName:      this.value?.datacenterName || 'docker-machine-data-center',
-      lanId:               this.value?.lanId,
-      lanName:             this.value?.lanName || 'docker-machine-lan',
-      privateLan:          this.value?.privateLan || false,
-      nicDhcp:             this.value?.nicDhcp || false,
-      nicIps:              this.value?.nicIps || [],
-      errors:              null,
+      authenticating:          false,
+      ready:                   false,
+      os:                      null,
+      password:                null,
+      havePassword:            false,
+      location:                initLocation(),
+      serverType:              initServerType(),
+      template:                initTemplate(),
+      serverZone:              initServerZone(),
+      volumeZone:              initVolumeZone(),
+      cpuFamily:               initCpuFamily(),
+      diskType:                initDiskType(),
+      cores:                   this.value?.cores || '2',
+      ram:                     this.value?.ram || '2048',
+      diskSize:                this.value?.diskSize || '50',
+      image:                   this.value?.image || 'ubuntu:    20.04',
+      imagePassword:           this.value?.imagePassword,
+      userData:                this.value?.userData,
+      sshUser:                 this.value?.sshUser || 'root',
+      sshInUserData:           this.value?.sshInUserData || false,
+      datacenterId:            this.value?.datacenterId,
+      datacenterName:          this.value?.datacenterName || 'docker-machine-data-center',
+      lanId:                   this.value?.lanId,
+      lanName:                 this.value?.lanName || 'docker-machine-lan',
+      privateLan:              this.value?.privateLan || false,
+      nicDhcp:                 this.value?.nicDhcp || false,
+      nicIps:                  this.value?.nicIps || [],
+      waitForIpChange:         this.value?.waitForIpChange || false,
+      waitForIpChangeTimeout:  this.value?.waitForIpChangeTimeout || '600',
+      natId:                   this.value?.natId,
+      natName:                 this.value?.natName || 'docker-machine-nat',
+      createNat:               this.value?.createNat || false,
+      natLansToGateways:       this.value?.natLansToGateways || [],
+      natPublicIps:            this.value?.natPublicIps || [],
+      errors:                  null,
     };
   },
 
@@ -295,12 +345,47 @@ export default {
     onChangeNicIps(event) {
       for (let ip of event) {
         if (!validateIp(ip)) {
-          alert("You have entered an invalid IP address!");
+          alert("Invalid IP detected: " + ip );
           return;
         }
       }
 
       this.nicIps = event;
+    },
+
+    onChangeNatPublicIps(event) {
+      for (let ip of event) {
+        if (!validateIp(ip)) {
+          alert("Invalid IP detected: " + ip );
+          return;
+        }
+      }
+
+      this.natPublicIps = event;
+    },
+
+    onChangeNatLansToGateways(event) {
+
+      for (let el of event) {
+        let spl = el.split(':')
+        if (spl.length != 2) {
+          alert("Invalid entry detected: " + el + ". The accepted format is LanId:IP!");
+          return;
+        }
+        let lanId = spl[0]
+        if (Number.isNaN(parseInt(lanId))) {
+          alert("Invalid LAN ID detected: " + lanId );
+          return;
+        }
+
+        let ip = spl[1]
+        if (!validateIp(ip)) {
+          alert("Invalid IP detected: " + ip );
+          return;
+        }
+      }
+
+      this.natLansToGateways = event.sort();
     },
 
     onPrivateKeyFileSelected(v) {
@@ -314,6 +399,27 @@ export default {
       this.$emit('validationChanged', true);
     },
 
+    formatNatLansToGateways() {
+      let aux = {}
+      for (let el of this.natLansToGateways) {
+        let spl = el.split(':')
+        let lanId = spl[0], ip = spl[1]
+
+        if (!aux.hasOwnProperty(lanId)) {
+          aux[lanId] = [ip]
+        } else {
+          aux[lanId].push(ip)
+        }
+      }
+
+      let formatedValues = []
+      for (let lanId in aux) {
+        formatedValues.push(`${lanId}=${aux[lanId].join(',')}`)
+      }
+
+      return formatedValues.join(':')
+    },
+
     syncValue() {
       // Note: We don't need to provide password as this is picked up via the credential
 
@@ -321,6 +427,7 @@ export default {
       this.value.location = this.location.selected?.name;
       this.value.serverType = this.serverType.selected?.name;
       this.value.serverZone = this.serverZone.selected?.name;
+      this.value.template = this.template.selected?.name;
       this.value.volumeZone = this.volumeZone.selected?.name;
       this.value.cpuFamily = this.cpuFamily.selected?.name;
       this.value.diskType = this.diskType.selected?.name;
@@ -339,6 +446,13 @@ export default {
       this.value.privateLan = this.privateLan;
       this.value.nicDhcp = this.nicDhcp;
       this.value.nicIps = this.nicIps;
+      this.value.waitForIpChange = this.waitForIpChange;
+      this.value.waitForIpChangeTimeout = this.waitForIpChangeTimeout;
+      this.value.natId = this.natId;
+      this.value.natName = this.natName;
+      this.value.createNat = this.createNat;
+      this.value.natLansToGateways = this.formatNatLansToGateways();
+      this.value.natPublicIps = this.natPublicIps;
     },
 
     test() {
@@ -390,7 +504,7 @@ export default {
             :searchable="false"
           />
         </div>
-        <div class="col span-3">
+        <div class="col span-3" v-if="serverType.selected.value === 'ENTERPRISE'">
           <LabeledSelect
             v-model="serverZone.selected"
             label="ServerZone"
@@ -399,7 +513,7 @@ export default {
             :searchable="false"
           />
         </div>
-        <div class="col span-3">
+        <div class="col span-3" v-if="serverType.selected.value === 'ENTERPRISE'">
           <LabeledSelect
             v-model="volumeZone.selected"
             label="VolumeZone"
@@ -408,9 +522,18 @@ export default {
             :searchable="false"
           />
         </div>
+        <div class="col span-3" v-if="serverType.selected.value === 'CUBE'">
+          <LabeledSelect
+            v-model="template.selected"
+            label="CUBE Server Template"
+            :options="template.options"
+            :loading="template.busy"
+            :searchable="false"
+          />
+        </div>
       </div>
 
-      <div class="row mt-10">
+      <div class="row mt-10" v-if="serverType.selected.value === 'ENTERPRISE'">
         <div class="col span-3">
           <LabeledSelect
             v-model="cpuFamily.selected"
@@ -441,7 +564,7 @@ export default {
         </div>
       </div>
 
-      <div class="row mt-10">
+      <div class="row mt-10" v-if="serverType.selected.value === 'ENTERPRISE'">
         <div class="col span-6">
           <LabeledInput
             v-model="diskSize"
@@ -591,6 +714,81 @@ export default {
             @change="onChangeNicIps($event)"
           />
           <p class="help-block">Optional. IPBlock reserved IPs. If not set, the driver will reserve an IPBlock automatically or let the API set a private IP if the LAN is private</p>
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-4">
+          <Checkbox
+            label="Wait for NIC IP change"
+            v-model="waitForIpChange"
+            :mode="mode"
+            :disabled="busy"
+          />
+          <p class="help-block">Should the driver wait for the NIC IP to be set by external sources?</p>
+        </div>
+        <div class="col span-4">
+          <LabeledInput
+            v-model="waitForIpChangeTimeout"
+            :mode="mode"
+            :disabled="busy"
+            label="Wait for IP change timeout"
+          />
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-4">
+          <LabeledInput
+            v-model="natId"
+            :mode="mode"
+            :disabled="busy"
+            label="IONOS Nat Gateway ID"
+          />
+          <p class="help-block">Optional, UUID-4 format. Use a preconfigured NAT Gateway. Datacenter ID and Private LAN required. Overrides NAT Config below</p>
+        </div>
+        <div class="col span-4">
+          <LabeledInput
+            v-model="natName"
+            :mode="mode"
+            :disabled="busy"
+            label="IONOS Nat Gateway Name"
+          />
+          <p class="help-block">String. If the "Create NAT" checkbox is checked, will try creating a NAT with this name. If one already exists, will use the existing NAT.</p>
+        </div>
+        <div class="col span-4">
+          <Checkbox
+            label="Create a configurable NAT"
+            v-model="createNat"
+            :mode="mode"
+            :disabled="busy"
+          />
+          <p class="help-block">Requires private LAN. You can override settings of this NAT using the form below <a href="#" target="_blank" rel="noopener noreferrer">See open ports here</a>. Must set gateway IP as default route via cloud config, default: 10.0.0.1</p>
+        </div>
+      </div>
+
+      <div class="row mt-10">
+        <div class="col span-4">
+          <StringList
+            label="Custom NAT: map LANs to Gateway IPs"
+            v-model="natLansToGateways"
+            :items="natLansToGateways"
+            :mode="mode"
+            :disabled="busy"
+            @change="onChangeNatLansToGateways($event)"
+          />
+          <p class="help-block">Optional. Maps Lan IDs to a specific Gateway IP. Gateway IP must be set manually as default route.</p>
+        </div>
+        <div class="col span-4">
+          <StringList
+            label="Custom NAT: Public IPs"
+            v-model="natPublicIps"
+            :items="natPublicIps"
+            :mode="mode"
+            :disabled="busy"
+            @change="onChangeNatPublicIps($event)"
+          />
+          <p class="help-block">Optional. IPBlock reserved IPs. If not set, the driver will reserve an IPBlock automatically</p>
         </div>
       </div>
     </div>
