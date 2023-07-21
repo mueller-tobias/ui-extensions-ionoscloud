@@ -288,9 +288,9 @@ export default {
       diskSize:                this.value?.diskSize || '50',
       image:                   this.value?.image || 'ubuntu:20.04',
       imagePassword:           this.value?.imagePassword,
-      userData:                this.value?.userData,
+      cloudInit:                this.value?.cloudInit,
       sshUser:                 this.value?.sshUser || 'root',
-      sshInUserData:           this.value?.sshInUserData || false,
+      sshInCloudInit:           this.value?.sshInCloudInit || false,
       datacenterId:            this.value?.datacenterId,
       datacenterName:          this.value?.datacenterName || 'docker-machine-data-center',
       lanId:                   this.value?.lanId,
@@ -436,9 +436,9 @@ export default {
       this.value.diskSize = this.diskSize;
       this.value.image = this.image;
       this.value.imagePassword = this.imagePassword;
-      this.value.userData = this.userData;
+      this.value.cloudInit = this.cloudInit;
       this.value.sshUser = this.sshUser;
-      this.value.sshInUserData = this.sshInUserData;
+      this.value.sshInCloudInit = this.sshInCloudInit;
       this.value.datacenterId = this.datacenterId;
       this.value.datacenterName = this.datacenterName;
       this.value.lanId = this.lanId;
@@ -613,10 +613,10 @@ export default {
         <div class="col span-12">
           <label class="acc-label">Cloud init configuration.</label>
           <TextArea
-            v-model="userData"
+            v-model="cloudInit"
             :mode="mode"
             :disabled="busy"
-            @input="userData=$event.target.value;"
+            @input="cloudInit=$event.target.value;"
           ></TextArea>
           <p class="help-block">Optional. <a href="https://cloudinit.readthedocs.io/en/latest/topics/examples.html" target="_blank" rel="noopener noreferrer">Cloud-init Documentation</a>.</p>
         </div>
@@ -635,7 +635,7 @@ export default {
         <div class="col span-4">
           <Checkbox
             label="Send SSH in user data."
-            v-model="sshInUserData"
+            v-model="sshInCloudInit"
             :mode="mode"
             :disabled="busy"
           />
