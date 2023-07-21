@@ -286,7 +286,7 @@ export default {
       cores:                   this.value?.cores || '2',
       ram:                     this.value?.ram || '2048',
       diskSize:                this.value?.diskSize || '50',
-      image:                   this.value?.image || 'ubuntu:    20.04',
+      image:                   this.value?.image || 'ubuntu:20.04',
       imagePassword:           this.value?.imagePassword,
       userData:                this.value?.userData,
       sshUser:                 this.value?.sshUser || 'root',
@@ -424,13 +424,13 @@ export default {
       // Note: We don't need to provide password as this is picked up via the credential
 
       // Copy the values from the form to the correct places on the value
-      this.value.location = this.location.selected?.name;
-      this.value.serverType = this.serverType.selected?.name;
-      this.value.serverZone = this.serverZone.selected?.name;
-      this.value.template = this.template.selected?.name;
-      this.value.volumeZone = this.volumeZone.selected?.name;
-      this.value.cpuFamily = this.cpuFamily.selected?.name;
-      this.value.diskType = this.diskType.selected?.name;
+      this.value.location = this.location.selected?.value;
+      this.value.serverType = this.serverType.selected?.value;
+      this.value.serverZone = this.serverZone.selected?.value;
+      this.value.template = this.template.selected?.value;
+      this.value.volumeZone = this.volumeZone.selected?.value;
+      this.value.cpuFamily = this.cpuFamily.selected?.value;
+      this.value.diskType = this.diskType.selected?.value;
       this.value.cores = this.cores;
       this.value.ram = this.ram;
       this.value.diskSize = this.diskSize;

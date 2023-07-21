@@ -68,6 +68,10 @@ export default {
       this.value.annotations['ionoscloud.cattle.io/token'] = this.value.decodedData.token;
       this.value.annotations['ionoscloud.cattle.io/endpoint'] = this.value.decodedData.endpoint;
 
+      this.value.username = this.value.decodedData.username;
+      this.value.password = this.value.decodedData.password;
+      this.value.token = this.value.decodedData.token;
+      this.value.endpoint = this.value.decodedData.endpoint;
       return true;
     },
 
