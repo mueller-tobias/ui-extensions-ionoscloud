@@ -175,7 +175,7 @@ function initCpuFamily() {
         value: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'}
       },
     ],
-    selected: {'value': 'INTEL_SKYLAKE', 'name': 'Intel SKYLAKE (Europe)'},
+    selected: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'},
     busy:     false,
     enabled:  false,
   };
