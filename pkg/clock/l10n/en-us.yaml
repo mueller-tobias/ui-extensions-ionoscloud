@@ -1,0 +1,13 @@
+driver:
+  ionoscloud:
+    auth:
+      fields:
+        password: Password
+        username: Username
+        token: Token
+        endpoint: Endpoint
+      placeholders:
+        password: ($IONOSCLOUD_PASSWORD)
+        username: ($IONOSCLOUD_USERNAME)
+        token: ($IONOSCLOUD_TOKEN)
+        endpoint: ($IONOSCLOUD_ENDPOINT)
