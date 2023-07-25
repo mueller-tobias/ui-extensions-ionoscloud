@@ -12,13 +12,13 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.2.0
-    created: "2023-07-25T15:52:05.307833544Z"
+    created: "2023-07-25T15:58:08.898287335Z"
     description: Adds a new feature to the top-level menu that shows a full-page clock
-    digest: 7f4da60827c05d52ccce260ae23fd1137acde3c84c7e29a75b206823d4e523bc
+    digest: 964931e8ed4d42b23cde3a70600e80d78050f5dc09cdcb2e0aa8b75c99e29853
     icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
     name: clock
     type: application
     urls:
     - assets/clock/clock-0.2.0.tgz
     version: 0.2.0
-generated: "2023-07-25T15:52:05.305797308Z"
+generated: "2023-07-25T15:58:08.893978924Z"
