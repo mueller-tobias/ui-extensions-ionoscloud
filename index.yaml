@@ -1,6 +1,6 @@
 apiVersion: v1
 entries:
-  ionoscloud:
+  clock:
   - annotations:
       catalog.cattle.io/certified: rancher
       catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.28.0-0'
@@ -11,13 +11,14 @@ entries:
       catalog.cattle.io/scope: management
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
-    appVersion: 1.0.0
-    created: "2023-07-25T13:51:16.040601999Z"
-    description: Node driver UI for ionoscloud
-    digest: c11625822b6d1d8ed3a58620dbd2feed2b89f48974430081b2140e042cc9607e
-    name: ionoscloud
+    appVersion: 0.2.0
+    created: "2023-07-25T15:52:05.307833544Z"
+    description: Adds a new feature to the top-level menu that shows a full-page clock
+    digest: 7f4da60827c05d52ccce260ae23fd1137acde3c84c7e29a75b206823d4e523bc
+    icon: https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/clock/clock.svg
+    name: clock
     type: application
     urls:
-    - ionoscloud/ionoscloud-1.0.0.tgz
-    version: 1.0.0
-generated: "2023-07-25T13:51:16.039900484Z"
+    - assets/clock/clock-0.2.0.tgz
+    version: 0.2.0
+generated: "2023-07-25T15:52:05.305797308Z"
