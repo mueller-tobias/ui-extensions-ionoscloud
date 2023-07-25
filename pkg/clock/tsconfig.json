@@ -16,16 +16,12 @@
     "typeRoots": [
       "../../node_modules",
       "../../node_modules/@rancher/shell/types"
-    ],    
+    ],
     "types": [
       "node",
       "webpack-env",
-      "@types/node",
-      "@types/jest",
-      "@types/lodash",
       "@nuxt/types",
-      "rancher",
-      "shell"
+      "rancher"
     ],
     "lib": [
       "esnext",
@@ -34,21 +30,24 @@
       "scripthost"
     ],
     "paths": {
-      "@shell/*": [
-        "../../node_modules/@rancher/shell/*"
+      "@shell/core/*": [
+        "../../node_modules/@rancher/shell/core/*"
       ],
-      "@components/*": [
-        "@rancher/components/*"
+      "@shell/config/*": [
+        "../../node_modules/@rancher/shell/config/*"
+      ],
+      "@shell/store/*": [
+        "../../node_modules/@rancher/shell/store/*"
       ]
     }
   },
   "include": [
     "**/*.ts",
-    "**/*.d.ts",
     "**/*.tsx",
-    "**/*.vue"
+    "**/*.vue",
+    "../../node_modules/@rancher/shell/core/types.ts"
   ],
   "exclude": [
-    "../../node_modules"
+    "node_modules"
   ]
 }
