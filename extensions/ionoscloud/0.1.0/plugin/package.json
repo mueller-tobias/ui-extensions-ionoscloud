@@ -3,7 +3,7 @@
   "description": "Adds Machine Config and Cloud Credeantials for the ionoscloud rancher driver",
   "version": "0.1.0",
   "private": false,
-  "icon": "https://raw.githubusercontent.com/rancher/ui-plugin-examples/main/pkg/ionoscloud/ionoscloud.svg",
+  "icon": "https://raw.githubusercontent.com/ionos-cloud/ui-extensions-ionoscloud/main/pkg/ionoscloud/ionoscloud.svg",
   "rancher": true,
   "engines": {
     "node": ">=12"
