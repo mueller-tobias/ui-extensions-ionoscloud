@@ -1,6 +1,5 @@
 import { importTypes } from '@rancher/auto-import';
 import { IPlugin } from '@shell/core/types';
-import NewFeature from './NewFeature.vue';
 
 // Init the package
 export default function(plugin: IPlugin) {
@@ -11,11 +10,5 @@ export default function(plugin: IPlugin) {
   plugin.metadata = require('./package.json');
 
   // Load a product
-  plugin.addProduct(require('./product'));
 
-  plugin.addRoute({
-    name:      'clock',
-    path:      '/clock',
-    component: NewFeature
-  });
 }
