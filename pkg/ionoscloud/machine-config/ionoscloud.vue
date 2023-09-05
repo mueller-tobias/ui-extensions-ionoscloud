@@ -13,187 +13,250 @@ import FileSelector from '../components/FileSelector';
 
 import { LabeledTooltip } from '@rancher/components';
 
-function initLocation() {
+function initLocation(initialValue) {
+  let select_options = [
+    {
+      label: 'Las Vegas, USA',
+      value: {'value': 'us/las', 'name': 'Las Vegas, USA'}
+    },
+    {
+      label:'Newark, USA',
+      value: {'value': 'us/ewr', 'name':'Newark, USA'}
+    },
+    {
+      label: 'Frankfurt, Germany',
+      value: {'value': 'de/fra', 'name': 'Frankfurt, Germany'}
+    },
+    {
+      label: 'Berlin, Germany',
+      value: {'value': 'de/txl', 'name': 'Berlin, Germany'}
+    },
+    {
+      label: 'London, UK',
+      value: {'value': 'gb/lhr', 'name': 'London, UK'}
+    },
+    {
+      label: 'Logroño, Spain',
+      value: {'value': 'es/vit', 'name': 'Logroño, Spain'}
+    },
+    {
+      label: 'Paris, France',
+      value: {'value': 'fr/par', 'name': 'Paris, France'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'Las Vegas, USA',
-        value: {'value': 'us/las', 'name': 'Las Vegas, USA'}
-      },
-      {
-        label:'Newark, USA',
-        value: {'value': 'us/ewr', 'name':'Newark, USA'}
-      },
-      {
-        label: 'Frankfurt, Germany',
-        value: {'value': 'de/fra', 'name': 'Frankfurt, Germany'}
-      },
-      {
-        label: 'Berlin, Germany',
-        value: {'value': 'de/txl', 'name': 'Berlin, Germany'}
-      },
-      {
-        label: 'London, UK',
-        value: {'value': 'gb/lhr', 'name': 'London, UK'}
-      },
-      {
-        label: 'Logroño, Spain',
-        value: {'value': 'es/vit', 'name': 'Logroño, Spain'}
-      },
-      {
-        label: 'Paris, France',
-        value: {'value': 'fr/par', 'name': 'Paris, France'}
-      },
-    ],
-    selected: {'value': 'us/las', 'name': 'Las Vegas, USA'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initServerType() {
+function initServerType(initialValue) {
+  let select_options = [
+    {
+      label: 'Enterprise',
+      value: {'value': 'ENTERPRISE', 'name': 'Enterprise'}
+    },
+    {
+      label:'Cube',
+      value: {'value': 'CUBE', 'name':'Cube'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'Enterprise',
-        value: {'value': 'ENTERPRISE', 'name': 'Enterprise'}
-      },
-      {
-        label:'Cube',
-        value: {'value': 'CUBE', 'name':'Cube'}
-      },
-    ],
-    selected: {'value': 'ENTERPRISE', 'name': 'Enterprise'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initServerZone() {
+function initserverAvailabilityZone(initialValue) {
+  let select_options = [
+    {
+      label: 'AUTO',
+      value: {'value': 'AUTO', 'name': 'AUTO'}
+    },
+    {
+      label:'ZONE_1',
+      value: {'value': 'ZONE_1', 'name':'ZONE_1'}
+    },
+    {
+      label:'ZONE_2',
+      value: {'value': 'ZONE_2', 'name':'ZONE_2'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'AUTO',
-        value: {'value': 'AUTO', 'name': 'AUTO'}
-      },
-      {
-        label:'ZONE_1',
-        value: {'value': 'ZONE_1', 'name':'ZONE_1'}
-      },
-      {
-        label:'ZONE_2',
-        value: {'value': 'ZONE_2', 'name':'ZONE_2'}
-      },
-    ],
-    selected: {'value': 'AUTO', 'name': 'AUTO'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initTemplate() {
+function initTemplate(initialValue) {
+  let select_options = [
+    {
+      label: 'XS',
+      value: {'value': 'CUBES XS', 'name': 'XS'}
+    },
+    {
+      label: 'S',
+      value: {'value': 'CUBES S', 'name': 'S'}
+    },
+    {
+      label: 'M',
+      value: {'value': 'CUBES M', 'name': 'M'}
+    },
+    {
+      label: 'L',
+      value: {'value': 'CUBES L', 'name': 'L'}
+    },
+    {
+      label: 'XL',
+      value: {'value': 'CUBES XL', 'name': 'XL'}
+    },
+    {
+      label: 'XXL',
+      value: {'value': 'CUBES XXL', 'name': 'XXL'}
+    },
+    {
+      label: '3XL',
+      value: {'value': 'CUBES 3XL', 'name': '3XL'}
+    },
+    {
+      label: '4XL',
+      value: {'value': 'CUBES 4XL', 'name': '4XL'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'XS',
-        value: {'value': 'CUBES XS', 'name': 'XS'}
-      },
-      {
-        label: 'S',
-        value: {'value': 'CUBES S', 'name': 'S'}
-      },
-      {
-        label: 'M',
-        value: {'value': 'CUBES M', 'name': 'M'}
-      },
-      {
-        label: 'L',
-        value: {'value': 'CUBES L', 'name': 'L'}
-      },
-      {
-        label: 'XL',
-        value: {'value': 'CUBES XL', 'name': 'XL'}
-      },
-      {
-        label: 'XXL',
-        value: {'value': 'CUBES XXL', 'name': 'XXL'}
-      },
-      {
-        label: '3XL',
-        value: {'value': 'CUBES 3XL', 'name': '3XL'}
-      },
-      {
-        label: '4XL',
-        value: {'value': 'CUBES 4XL', 'name': '4XL'}
-      },
-    ],
-    selected: {'value': 'CUBES XS', 'name': 'XS'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initVolumeZone() {
+function initvolumeAvailabilityZone(initialValue) {
+  let select_options = [
+    {
+      label: 'AUTO',
+      value: {'value': 'AUTO', 'name': 'AUTO'}
+    },
+    {
+      label:'ZONE_1',
+      value: {'value': 'ZONE_1', 'name':'ZONE_1'}
+    },
+    {
+      label:'ZONE_2',
+      value: {'value': 'ZONE_2', 'name':'ZONE_2'}
+    },
+    {
+      label:'ZONE_3',
+      value: {'value': 'ZONE_3', 'name':'ZONE_3'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'AUTO',
-        value: {'value': 'AUTO', 'name': 'AUTO'}
-      },
-      {
-        label:'ZONE_1',
-        value: {'value': 'ZONE_1', 'name':'ZONE_1'}
-      },
-      {
-        label:'ZONE_2',
-        value: {'value': 'ZONE_2', 'name':'ZONE_2'}
-      },
-      {
-        label:'ZONE_3',
-        value: {'value': 'ZONE_3', 'name':'ZONE_3'}
-      },
-    ],
-    selected: {'value': 'AUTO', 'name': 'AUTO'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initCpuFamily() {
+function initCpuFamily(initialValue) {
+  let select_options = [
+    {
+      label: 'Intel XEON (USA)',
+      value: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'}
+    },
+    {
+      label: 'Intel SKYLAKE (Europe)',
+      value: {'value': 'INTEL_SKYLAKE', 'name': 'Intel SKYLAKE (Europe)'}
+    },
+    {
+      label: 'AMD OPTERON (USA)',
+      value: {'value': 'AMD_OPTERON', 'name': 'AMD OPTERON (USA)'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'Intel SKYLAKE (Europe)',
-        value: {'value': 'INTEL_SKYLAKE', 'name': 'Intel SKYLAKE (Europe)'}
-      },
-      {
-        label: 'AMD OPTERON (USA)',
-        value: {'value': 'AMD_OPTERON', 'name': 'AMD OPTERON (USA)'}
-      },
-      {
-        label: 'Intel XEON (USA)',
-        value: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'}
-      },
-    ],
-    selected: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initDiskType() {
+function initDiskType(initialValue) {
+  let select_options = [
+    {
+      label: 'HDD',
+      value: {'value': 'HDD', 'name': 'HDD'}
+    },
+    {
+      label: 'SSD',
+      value: {'value': 'SSD', 'name': 'SSD'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'HDD',
-        value: {'value': 'HDD', 'name': 'HDD'}
-      },
-      {
-        label: 'SSD',
-        value: {'value': 'SSD', 'name': 'SSD'}
-      },
-    ],
-    selected: {'value': 'HDD', 'name': 'HDD'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
@@ -276,21 +339,21 @@ export default {
       os:                      null,
       password:                null,
       havePassword:            false,
-      location:                initLocation(),
-      serverType:              initServerType(),
-      template:                initTemplate(),
-      serverZone:              initServerZone(),
-      volumeZone:              initVolumeZone(),
-      cpuFamily:               initCpuFamily(),
-      diskType:                initDiskType(),
+      location:                initLocation(this.value?.location || 'us/las'),
+      serverType:              initServerType(this.value?.serverType || 'ENTERPRISE'),
+      template:                initTemplate(this.value?.template || 'CUBES XS'),
+      serverAvailabilityZone:  initserverAvailabilityZone(this.value?.serverAvailabilityZone || 'AUTO'),
+      volumeAvailabilityZone:  initvolumeAvailabilityZone(this.value?.volumeAvailabilityZone || 'AUTO'),
+      cpuFamily:               initCpuFamily(this.value?.cpuFamily || 'INTEL_XEON'),
+      diskType:                initDiskType(this.value?.diskType || 'HDD'),
       cores:                   this.value?.cores || '2',
       ram:                     this.value?.ram || '2048',
       diskSize:                this.value?.diskSize || '50',
       image:                   this.value?.image || 'ubuntu:20.04',
       imagePassword:           this.value?.imagePassword,
-      cloudInit:                this.value?.cloudInit,
+      cloudInit:               this.value?.cloudInit,
       sshUser:                 this.value?.sshUser || 'root',
-      sshInCloudInit:           this.value?.sshInCloudInit || false,
+      sshInCloudInit:          this.value?.sshInCloudInit || false,
       datacenterId:            this.value?.datacenterId,
       datacenterName:          this.value?.datacenterName || 'docker-machine-data-center',
       lanId:                   this.value?.lanId,
@@ -321,8 +384,8 @@ export default {
     initForViewMode() {
       this.fakeSelectOptions(this.Location, this.value?.location);
       this.fakeSelectOptions(this.ServerType, this.value?.serverType);
-      this.fakeSelectOptions(this.ServerZone, this.value?.serverZone);
-      this.fakeSelectOptions(this.VolumeZone, this.value?.volumeZone);
+      this.fakeSelectOptions(this.serverAvailabilityZone, this.value?.serverAvailabilityZone);
+      this.fakeSelectOptions(this.volumeAvailabilityZone, this.value?.volumeAvailabilityZone);
       this.fakeSelectOptions(this.CpuFamily, this.value?.cpuFamily);
       this.fakeSelectOptions(this.DiskType, this.value?.diskType);
     },
@@ -426,9 +489,9 @@ export default {
       // Copy the values from the form to the correct places on the value
       this.value.location = this.location.selected?.value;
       this.value.serverType = this.serverType.selected?.value;
-      this.value.serverZone = this.serverZone.selected?.value;
+      this.value.serverAvailabilityZone = this.serverAvailabilityZone.selected?.value;
       this.value.template = this.template.selected?.value;
-      this.value.volumeZone = this.volumeZone.selected?.value;
+      this.value.volumeAvailabilityZone = this.volumeAvailabilityZone.selected?.value;
       this.value.cpuFamily = this.cpuFamily.selected?.value;
       this.value.diskType = this.diskType.selected?.value;
       this.value.cores = this.cores;
@@ -506,19 +569,19 @@ export default {
         </div>
         <div class="col span-3" v-if="serverType.selected.value === 'ENTERPRISE'">
           <LabeledSelect
-            v-model="serverZone.selected"
-            label="ServerZone"
-            :options="serverZone.options"
-            :loading="serverZone.busy"
+            v-model="serverAvailabilityZone.selected"
+            label="serverAvailabilityZone"
+            :options="serverAvailabilityZone.options"
+            :loading="serverAvailabilityZone.busy"
             :searchable="false"
           />
         </div>
         <div class="col span-3" v-if="serverType.selected.value === 'ENTERPRISE'">
           <LabeledSelect
-            v-model="volumeZone.selected"
-            label="VolumeZone"
-            :options="volumeZone.options"
-            :loading="volumeZone.busy"
+            v-model="volumeAvailabilityZone.selected"
+            label="volumeAvailabilityZone"
+            :options="volumeAvailabilityZone.options"
+            :loading="volumeAvailabilityZone.busy"
             :searchable="false"
           />
         </div>
