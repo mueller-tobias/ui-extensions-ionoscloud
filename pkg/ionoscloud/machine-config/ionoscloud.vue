@@ -367,6 +367,7 @@ export default {
       natName:                 this.value?.natName || 'docker-machine-nat',
       createNat:               this.value?.createNat || false,
       natLansToGateways:       this.value?.natLansToGateways || [],
+      natFlowlogs:             this.value?.natFlowlogs || [],
       natPublicIps:            this.value?.natPublicIps || [],
       errors:                  null,
     };
@@ -450,6 +451,30 @@ export default {
 
       this.natLansToGateways = event.sort();
     },
+    onChangeNatFlowlogs(event) {
+
+      for (let el of event) {
+        let spl = el.split(':')
+        if (spl.length != 4) {
+          alert("Invalid entry detected: " + el + ". The accepted format is name:action:direction:bucket!");
+          return;
+        }
+        let action = spl[1]
+        if (["ACCEPTED", "REJECTED", "ALL"].includes(action)) {
+          alert("Invalid action: " + action + ". Must be one of ['ACCEPTED', 'REJECTED', 'ALL']");
+          return;
+        }
+
+        let direction = spl[2]
+        if (["INGRESS", "EGRESS", "BIDIRECTIONAL"].includes(direction)) {
+          alert("Invalid direction: " + direction + ". Must be one of ['INGRESS', 'EGRESS', 'BIDIRECTIONAL']");
+          return;
+        }
+      }
+
+      this.natFlowlogs = event.sort();
+
+    },
 
     onPrivateKeyFileSelected(v) {
       this.filename = v.file.name;
@@ -515,6 +540,7 @@ export default {
       this.value.natName = this.natName;
       this.value.createNat = this.createNat;
       this.value.natLansToGateways = this.formatNatLansToGateways();
+      this.value.natFlowlogs = this.natFlowlogs;
       this.value.natPublicIps = this.natPublicIps;
     },
 
@@ -830,7 +856,7 @@ export default {
         </div>
       </div>
 
-      <div class="row mt-10">
+      <div class="row mt-10" v-if="createNat === true">
         <div class="col span-4">
           <StringList
             label="Custom NAT: map LANs to Gateway IPs"
@@ -852,6 +878,17 @@ export default {
             @change="onChangeNatPublicIps($event)"
           />
           <p class="help-block">Optional. IPBlock reserved IPs. If not set, the driver will reserve an IPBlock automatically</p>
+        </div>
+        <div class="col span-4">
+          <StringList
+            label="Custom NAT: Flowlogs"
+            v-model="natFlowlogs"
+            :items="natFlowlogs"
+            :mode="mode"
+            :disabled="busy"
+            @change="onChangeNatFlowlogs($event)"
+          />
+          <p class="help-block">Optional. NAT Flowlogs.</p>
         </div>
       </div>
     </div>
