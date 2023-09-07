@@ -334,42 +334,51 @@ export default {
 
   data() {
     return {
-      authenticating:          false,
-      ready:                   false,
-      os:                      null,
-      password:                null,
-      havePassword:            false,
-      location:                initLocation(this.value?.location || 'us/las'),
-      serverType:              initServerType(this.value?.serverType || 'ENTERPRISE'),
-      template:                initTemplate(this.value?.template || 'CUBES XS'),
-      serverAvailabilityZone:  initserverAvailabilityZone(this.value?.serverAvailabilityZone || 'AUTO'),
-      volumeAvailabilityZone:  initvolumeAvailabilityZone(this.value?.volumeAvailabilityZone || 'AUTO'),
-      cpuFamily:               initCpuFamily(this.value?.cpuFamily || 'INTEL_XEON'),
-      diskType:                initDiskType(this.value?.diskType || 'HDD'),
-      cores:                   this.value?.cores || '2',
-      ram:                     this.value?.ram || '2048',
-      diskSize:                this.value?.diskSize || '50',
-      image:                   this.value?.image || 'ubuntu:20.04',
-      imagePassword:           this.value?.imagePassword,
-      cloudInit:               this.value?.cloudInit,
-      sshUser:                 this.value?.sshUser || 'root',
-      sshInCloudInit:          this.value?.sshInCloudInit || false,
-      datacenterId:            this.value?.datacenterId,
-      datacenterName:          this.value?.datacenterName || 'docker-machine-data-center',
-      lanId:                   this.value?.lanId,
-      lanName:                 this.value?.lanName || 'docker-machine-lan',
-      privateLan:              this.value?.privateLan || false,
-      nicDhcp:                 this.value?.nicDhcp || false,
-      nicIps:                  this.value?.nicIps || [],
-      waitForIpChange:         this.value?.waitForIpChange || false,
-      waitForIpChangeTimeout:  this.value?.waitForIpChangeTimeout || '600',
-      natId:                   this.value?.natId,
-      natName:                 this.value?.natName || 'docker-machine-nat',
-      createNat:               this.value?.createNat || false,
-      natLansToGateways:       this.value?.natLansToGateways || [],
-      natFlowlogs:             this.value?.natFlowlogs || [],
-      natPublicIps:            this.value?.natPublicIps || [],
-      errors:                  null,
+      authenticating:              false,
+      ready:                       false,
+      os:                          null,
+      password:                    null,
+      havePassword:                false,
+      location:                    initLocation(this.value?.location || 'us/las'),
+      serverType:                  initServerType(this.value?.serverType || 'ENTERPRISE'),
+      template:                    initTemplate(this.value?.template || 'CUBES XS'),
+      serverAvailabilityZone:      initserverAvailabilityZone(this.value?.serverAvailabilityZone || 'AUTO'),
+      volumeAvailabilityZone:      initvolumeAvailabilityZone(this.value?.volumeAvailabilityZone || 'AUTO'),
+      cpuFamily:                   initCpuFamily(this.value?.cpuFamily || 'INTEL_XEON'),
+      diskType:                    initDiskType(this.value?.diskType || 'HDD'),
+      cores:                       this.value?.cores || '2',
+      ram:                         this.value?.ram || '2048',
+      diskSize:                    this.value?.diskSize || '50',
+      image:                       this.value?.image || 'ubuntu:20.04',
+      imagePassword:               this.value?.imagePassword,
+      cloudInit:                   this.value?.cloudInit,
+      sshUser:                     this.value?.sshUser || 'root',
+      sshInCloudInit:              this.value?.sshInCloudInit || false,
+      datacenterId:                this.value?.datacenterId,
+      datacenterName:              this.value?.datacenterName || 'docker-machine-data-center',
+      lanId:                       this.value?.lanId,
+      lanName:                     this.value?.lanName || 'docker-machine-lan',
+      privateLan:                  this.value?.privateLan || false,
+      nicDhcp:                     this.value?.nicDhcp || false,
+      nicIps:                      this.value?.nicIps || [],
+      waitForIpChange:             this.value?.waitForIpChange || false,
+      waitForIpChangeTimeout:      this.value?.waitForIpChangeTimeout || '600',
+      natId:                       this.value?.natId,
+      natName:                     this.value?.natName || 'docker-machine-nat',
+      createNat:                   this.value?.createNat || false,
+      natLansToGateways:           this.value?.natLansToGateways || [],
+      natFlowlogs:                 this.value?.natFlowlogs || [],
+      natPublicIps:                this.value?.natPublicIps || [],
+      natRules:                    this.value?.natRules || [],
+      natRuleName:                 '',
+      natRuleType:                 '',
+      natRuleProtocol:             'ALL',
+      natRuleSourceSubnet:         '',
+      natRulePublicIp:             '',
+      natRuleTargetSubnet:         '',
+      natRuleTargetPortRangeStart: '',
+      natRuleTargetPortRangeEnd:   '',
+      errors:                      null,
     };
   },
 
@@ -473,7 +482,19 @@ export default {
       }
 
       this.natFlowlogs = event.sort();
+    },
 
+    onChangeNatRules(event) {
+      for (let el of event) {
+        let spl = el.split(':')
+        if (spl.length != 8) {
+          alert("Invalid entry detected: " + el + ". The accepted format is " +
+          "name:type:protocol:source_subnet:target_subnet:target_port_range_start:target_port_range_end:public_ip!");
+          return;
+        }
+      }
+
+      this.natRules = event.sort();
     },
 
     onPrivateKeyFileSelected(v) {
@@ -485,6 +506,14 @@ export default {
       this.privateKeyFieldType = 'text';
 
       this.$emit('validationChanged', true);
+    },
+
+    addNatRule() {
+      let el = [
+        this.natRuleName, this.natRuleType, this.natRuleProtocol, this.natRulePublicIp, this.natRuleSourceSubnet,
+        this.natRuleTargetSubnet, this.natRuleTargetPortRangeStart, this.natRuleTargetPortRangeEnd
+      ].join(':')
+      this.natRules.push(el)
     },
 
     formatNatLansToGateways() {
@@ -542,6 +571,7 @@ export default {
       this.value.natLansToGateways = this.formatNatLansToGateways();
       this.value.natFlowlogs = this.natFlowlogs;
       this.value.natPublicIps = this.natPublicIps;
+      this.value.natRules = this.natRules;
     },
 
     test() {
@@ -890,6 +920,103 @@ export default {
           />
           <p class="help-block">Optional. NAT Flowlogs.</p>
         </div>
+      </div>
+
+      <div class="row mt-10" v-if="createNat === true">
+        <div class="col span-4">
+          <StringList
+            label="Custom NAT: Rules"
+            v-model="natRules"
+            :items="natRules"
+            :mode="mode"
+            :disabled="busy"
+            @change="onChangeNatRules($event)"
+          />
+          <p class="help-block">Optional. NAT Flowlogs.</p>
+        </div>
+      </div>
+      <div class="row mt-10 card-container" v-if="createNat === true">
+        <div class="row mt-10 card-container" v-if="createNat === true">
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleName"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Name"
+            />
+            <p class="help-block">String. The name of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleType"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Type"
+            />
+            <p class="help-block">String. The type of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleProtocol"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Protocol"
+            />
+            <p class="help-block">String. The protocol of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRulePublicIp"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Public IP, leave black and the driver will use the nat gateway IP"
+            />
+            <p class="help-block">String. The Public IP of the new Nat Gateway Rule.</p>
+          </div>
+        </div>
+        <div class="row mt-10 card-container" v-if="createNat === true">
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleSourceSubnet"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Source Subnet"
+            />
+            <p class="help-block">String. The Source Subnet of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetSubnet"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Target Subnet"
+            />
+            <p class="help-block">String. The Target Subnet of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetPortRangeStart"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Port Range Start"
+            />
+            <p class="help-block">Integer. The Port Range Start of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetPortRangeEnd"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Port Range End"
+            />
+            <p class="help-block">Integer. The Port Range End of the new Nat Gateway Rule.</p>
+          </div>
+        </div>
+      </div>
+      <div v-if="createNat === true">
+        <button @click="addNatRule()">
+          Add NAT Gateway Rule +
+        </button>
       </div>
     </div>
   </div>
