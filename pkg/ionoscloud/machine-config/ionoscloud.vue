@@ -262,6 +262,34 @@ function initDiskType(initialValue) {
   };
 }
 
+function initNatRuleProtocol() {
+  let select_options = [
+    {
+      label: 'ALL',
+      value: {'value': 'ALL', 'name': 'ALL'}
+    },
+    {
+      label: 'TCP',
+      value: {'value': 'TCP', 'name': 'TCP'}
+    },
+    {
+      label: 'UDP',
+      value: {'value': 'UDP', 'name': 'UDP'}
+    },
+    {
+      label: 'ICMP',
+      value: {'value': 'ICMP', 'name': 'ICMP'}
+    },
+  ]
+  
+  return {
+    options: select_options,
+    selected: select_options[0].value,
+    busy:     false,
+    enabled:  false,
+  };
+}
+
 function validateIp(ip) {
   if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)) {
     return true;
@@ -371,8 +399,8 @@ export default {
       natPublicIps:                this.value?.natPublicIps || [],
       natRules:                    this.value?.natRules || [],
       natRuleName:                 '',
-      natRuleType:                 '',
-      natRuleProtocol:             'ALL',
+      natRuleType:                 'SNAT',
+      natRuleProtocol:             initNatRuleProtocol(),
       natRuleSourceSubnet:         '',
       natRulePublicIp:             '',
       natRuleTargetSubnet:         '',
@@ -469,13 +497,13 @@ export default {
           return;
         }
         let action = spl[1]
-        if (["ACCEPTED", "REJECTED", "ALL"].includes(action)) {
+        if (!["ACCEPTED", "REJECTED", "ALL"].includes(action)) {
           alert("Invalid action: " + action + ". Must be one of ['ACCEPTED', 'REJECTED', 'ALL']");
           return;
         }
 
         let direction = spl[2]
-        if (["INGRESS", "EGRESS", "BIDIRECTIONAL"].includes(direction)) {
+        if (!["INGRESS", "EGRESS", "BIDIRECTIONAL"].includes(direction)) {
           alert("Invalid direction: " + direction + ". Must be one of ['INGRESS', 'EGRESS', 'BIDIRECTIONAL']");
           return;
         }
@@ -510,7 +538,7 @@ export default {
 
     addNatRule() {
       let el = [
-        this.natRuleName, this.natRuleType, this.natRuleProtocol, this.natRulePublicIp, this.natRuleSourceSubnet,
+        this.natRuleName, this.natRuleType, this.natRuleProtocol.selected.value, this.natRulePublicIp, this.natRuleSourceSubnet,
         this.natRuleTargetSubnet, this.natRuleTargetPortRangeStart, this.natRuleTargetPortRangeEnd
       ].join(':')
       this.natRules.push(el)
@@ -932,85 +960,83 @@ export default {
             :disabled="busy"
             @change="onChangeNatRules($event)"
           />
-          <p class="help-block">Optional. NAT Flowlogs.</p>
+          <p class="help-block">Optional. NAT Rules.</p>
         </div>
       </div>
       <div class="row mt-10 card-container" v-if="createNat === true">
-        <div class="row mt-10 card-container" v-if="createNat === true">
-          <div class="col span-3">
-            <LabeledInput
-              v-model="natRuleName"
-              :mode="mode"
-              :disabled="busy"
-              label="IONOS Nat Gateway Rule Name"
-            />
-            <p class="help-block">String. The name of the new Nat Gateway Rule.</p>
-          </div>
-          <div class="col span-3">
+        <div class="col span-3">
+          <LabeledInput
+            v-model="natRuleName"
+            :mode="mode"
+            :disabled="busy"
+            label="IONOS Nat Gateway Rule Name"
+          />
+          <p class="help-block">String. The name of the new Nat Gateway Rule.</p>
+        </div>
+        <div class="col span-3">
             <LabeledInput
               v-model="natRuleType"
               :mode="mode"
               :disabled="busy"
               label="IONOS Nat Gateway Rule Type"
             />
-            <p class="help-block">String. The type of the new Nat Gateway Rule.</p>
-          </div>
-          <div class="col span-3">
-            <LabeledInput
-              v-model="natRuleProtocol"
-              :mode="mode"
-              :disabled="busy"
-              label="IONOS Nat Gateway Rule Protocol"
-            />
-            <p class="help-block">String. The protocol of the new Nat Gateway Rule.</p>
-          </div>
-          <div class="col span-3">
-            <LabeledInput
-              v-model="natRulePublicIp"
-              :mode="mode"
-              :disabled="busy"
-              label="IONOS Nat Gateway Rule Public IP, leave black and the driver will use the nat gateway IP"
-            />
-            <p class="help-block">String. The Public IP of the new Nat Gateway Rule.</p>
-          </div>
+          <p class="help-block">String. The type of the new Nat Gateway Rule.</p>
         </div>
-        <div class="row mt-10 card-container" v-if="createNat === true">
-          <div class="col span-3">
-            <LabeledInput
-              v-model="natRuleSourceSubnet"
-              :mode="mode"
-              :disabled="busy"
-              label="IONOS Nat Gateway Rule Source Subnet"
-            />
-            <p class="help-block">String. The Source Subnet of the new Nat Gateway Rule.</p>
-          </div>
-          <div class="col span-3">
-            <LabeledInput
-              v-model="natRuleTargetSubnet"
-              :mode="mode"
-              :disabled="busy"
-              label="IONOS Nat Gateway Rule Target Subnet"
-            />
-            <p class="help-block">String. The Target Subnet of the new Nat Gateway Rule.</p>
-          </div>
-          <div class="col span-3">
-            <LabeledInput
-              v-model="natRuleTargetPortRangeStart"
-              :mode="mode"
-              :disabled="busy"
-              label="IONOS Nat Gateway Rule Port Range Start"
-            />
-            <p class="help-block">Integer. The Port Range Start of the new Nat Gateway Rule.</p>
-          </div>
-          <div class="col span-3">
-            <LabeledInput
-              v-model="natRuleTargetPortRangeEnd"
-              :mode="mode"
-              :disabled="busy"
-              label="IONOS Nat Gateway Rule Port Range End"
-            />
-            <p class="help-block">Integer. The Port Range End of the new Nat Gateway Rule.</p>
-          </div>
+        <div class="col span-3">
+          <LabeledSelect
+            v-model="natRuleProtocol.selected"
+            label="natRuleProtocol"
+            :options="natRuleProtocol.options"
+            :loading="natRuleProtocol.busy"
+            :searchable="false"
+          />
+        </div>
+        <div class="col span-3">
+          <LabeledInput
+            v-model="natRulePublicIp"
+            :mode="mode"
+            :disabled="busy"
+            label="IONOS Nat Gateway Rule Public IP, leave black and the driver will use the nat gateway IP"
+          />
+          <p class="help-block">String. The Public IP of the new Nat Gateway Rule.</p>
+        </div>
+      </div>
+      <div class="row mt-10 card-container" v-if="createNat === true">
+        <div class="col span-3">
+          <LabeledInput
+            v-model="natRuleSourceSubnet"
+            :mode="mode"
+            :disabled="busy"
+            label="IONOS Nat Gateway Rule Source Subnet"
+          />
+          <p class="help-block">String. The Source Subnet of the new Nat Gateway Rule.</p>
+        </div>
+        <div class="col span-3">
+          <LabeledInput
+            v-model="natRuleTargetSubnet"
+            :mode="mode"
+            :disabled="busy"
+            label="IONOS Nat Gateway Rule Target Subnet"
+          />
+          <p class="help-block">String. The Target Subnet of the new Nat Gateway Rule.</p>
+        </div>
+        <div class="col span-3">
+          <LabeledInput
+            v-model="natRuleTargetPortRangeStart"
+            :mode="mode"
+            :disabled="busy"
+            label="IONOS Nat Gateway Rule Port Range Start"
+          />
+          <p class="help-block">Integer. The Port Range Start of the new Nat Gateway Rule.</p>
+        </div>
+        <div class="col span-3">
+          <LabeledInput
+            v-model="natRuleTargetPortRangeEnd"
+            :mode="mode"
+            :disabled="busy"
+            label="IONOS Nat Gateway Rule Port Range End"
+          />
+          <p class="help-block">Integer. The Port Range End of the new Nat Gateway Rule.</p>
         </div>
       </div>
       <div v-if="createNat === true">
