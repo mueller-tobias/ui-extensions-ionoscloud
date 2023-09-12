@@ -297,6 +297,11 @@ function validateIp(ip) {
   return false;
 }
 
+function validateSubnet(subnet) {
+  let splitSubnet = subnet.split('/')
+  return (splitSubnet.length == 2 && validateIp(splitSubnet[0]) && !(Number.isNaN(parseInt(splitSubnet[1]))))
+}
+
 
 export default {
   components: {
@@ -512,17 +517,66 @@ export default {
       this.natFlowlogs = event.sort();
     },
 
+    checkNatRule(rule) {
+      let splitRule = rule.split(':') 
+      if (splitRule.length != 8) {
+        alert("Invalid entry detected: " + rule + ". The accepted format is " +
+        "name:type:protocol:source_subnet:target_subnet:target_port_range_start:target_port_range_end:public_ip!");
+        return false;
+      }
+      if (!['SNAT'].includes(splitRule[1])) {
+        alert("Invalid rule type: " + splitRule[1] + ". Must be one of ['SNAT']");
+        return false;
+      }
+      if (!['TCP', 'UDP', 'ICMP', 'ALL'].includes(splitRule[2])) {
+        alert("Invalid rule protocol: " + splitRule[2] + ". Must be one of ['TCP', 'UDP', 'ICMP', 'ALL']");
+        return false;
+      }
+      if (splitRule[3] && !validateIp(splitRule[3])) {
+        alert("Invalid IP detected: " + splitRule[3] );
+        return false;
+      }
+      if (!validateSubnet(splitRule[4])) {
+        alert("Invalid Subnet detected: " + splitRule[4] );
+        return false;
+      }
+      if (splitRule[5] && !validateSubnet(splitRule[5])) {
+        alert("Invalid Subnet detected: " + splitRule[5] );
+        return false;
+      }
+      if (splitRule[6] && Number.isNaN(parseInt(splitRule[6]))) {
+        alert("Invalid Port detected: " + splitRule[6] );
+        return false;
+      }
+      if (splitRule[7] && Number.isNaN(parseInt(splitRule[7]))) {
+        alert("Invalid Port detected: " + splitRule[7] );
+        return false;
+      }
+
+      return true
+    },
+
     onChangeNatRules(event) {
-      for (let el of event) {
-        let spl = el.split(':')
-        if (spl.length != 8) {
-          alert("Invalid entry detected: " + el + ". The accepted format is " +
-          "name:type:protocol:source_subnet:target_subnet:target_port_range_start:target_port_range_end:public_ip!");
+      for (let rule of event) {
+        if (!this.checkNatRule(rule)) {
           return;
         }
       }
-
       this.natRules = event.sort();
+    },
+
+    addNatRule() {
+      let rule = [
+        this.natRuleName, this.natRuleType, this.natRuleProtocol.selected.value, this.natRulePublicIp, this.natRuleSourceSubnet,
+        this.natRuleTargetSubnet, this.natRuleTargetPortRangeStart, this.natRuleTargetPortRangeEnd
+      ].join(':')
+      if (this.natRules.includes(rule)) {
+        alert("Rule is already in list!");
+        return;
+      }
+      if (this.checkNatRule(rule)) {
+        this.natRules.push(rule)
+      }
     },
 
     onPrivateKeyFileSelected(v) {
@@ -534,14 +588,6 @@ export default {
       this.privateKeyFieldType = 'text';
 
       this.$emit('validationChanged', true);
-    },
-
-    addNatRule() {
-      let el = [
-        this.natRuleName, this.natRuleType, this.natRuleProtocol.selected.value, this.natRulePublicIp, this.natRuleSourceSubnet,
-        this.natRuleTargetSubnet, this.natRuleTargetPortRangeStart, this.natRuleTargetPortRangeEnd
-      ].join(':')
-      this.natRules.push(el)
     },
 
     formatNatLansToGateways() {
@@ -951,7 +997,7 @@ export default {
       </div>
 
       <div class="row mt-10" v-if="createNat === true">
-        <div class="col span-4">
+        <div class="col span-6">
           <StringList
             label="Custom NAT: Rules"
             v-model="natRules"
@@ -960,89 +1006,91 @@ export default {
             :disabled="busy"
             @change="onChangeNatRules($event)"
           />
-          <p class="help-block">Optional. NAT Rules.</p>
+          <p class="help-block">Optional. NAT Rules. Use the form bellow to add a new NAT rule</p>
         </div>
       </div>
-      <div class="row mt-10 card-container" v-if="createNat === true">
-        <div class="col span-3">
-          <LabeledInput
-            v-model="natRuleName"
-            :mode="mode"
-            :disabled="busy"
-            label="IONOS Nat Gateway Rule Name"
-          />
-          <p class="help-block">String. The name of the new Nat Gateway Rule.</p>
-        </div>
-        <div class="col span-3">
+      <div class="card-container create-nat" v-if="createNat">
+        <div class="row mt-10">
+          <div class="col span-3">
             <LabeledInput
-              v-model="natRuleType"
+              v-model="natRuleName"
               :mode="mode"
               :disabled="busy"
-              label="IONOS Nat Gateway Rule Type"
+              label="IONOS Nat Gateway Rule Name"
             />
-          <p class="help-block">String. The type of the new Nat Gateway Rule.</p>
+            <p class="help-block">String. The name of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+              <LabeledInput
+                v-model="natRuleType"
+                :mode="mode"
+                :disabled="busy"
+                label="IONOS Nat Gateway Rule Type"
+              />
+            <p class="help-block">String. The type of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledSelect
+              v-model="natRuleProtocol.selected"
+              label="natRuleProtocol"
+              :options="natRuleProtocol.options"
+              :loading="natRuleProtocol.busy"
+              :searchable="false"
+            />
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRulePublicIp"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Public IP"
+            />
+            <p class="help-block">String. The Public IP of the new Nat Gateway Rule, leave black and the driver will use the nat gateway IP.</p>
+          </div>
         </div>
-        <div class="col span-3">
-          <LabeledSelect
-            v-model="natRuleProtocol.selected"
-            label="natRuleProtocol"
-            :options="natRuleProtocol.options"
-            :loading="natRuleProtocol.busy"
-            :searchable="false"
-          />
+        <div class="row mt-10">
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleSourceSubnet"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Source Subnet"
+            />
+            <p class="help-block">String. The Source Subnet of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetSubnet"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Target Subnet"
+            />
+            <p class="help-block">String. The Target Subnet of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetPortRangeStart"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Port Range Start"
+            />
+            <p class="help-block">Integer. The Port Range Start of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetPortRangeEnd"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Port Range End"
+            />
+            <p class="help-block">Integer. The Port Range End of the new Nat Gateway Rule.</p>
+          </div>
         </div>
-        <div class="col span-3">
-          <LabeledInput
-            v-model="natRulePublicIp"
-            :mode="mode"
-            :disabled="busy"
-            label="IONOS Nat Gateway Rule Public IP, leave black and the driver will use the nat gateway IP"
-          />
-          <p class="help-block">String. The Public IP of the new Nat Gateway Rule.</p>
+        <div class="mt-10">
+          <button @click="addNatRule()">
+            Add NAT Gateway Rule +
+          </button>
         </div>
-      </div>
-      <div class="row mt-10 card-container" v-if="createNat === true">
-        <div class="col span-3">
-          <LabeledInput
-            v-model="natRuleSourceSubnet"
-            :mode="mode"
-            :disabled="busy"
-            label="IONOS Nat Gateway Rule Source Subnet"
-          />
-          <p class="help-block">String. The Source Subnet of the new Nat Gateway Rule.</p>
-        </div>
-        <div class="col span-3">
-          <LabeledInput
-            v-model="natRuleTargetSubnet"
-            :mode="mode"
-            :disabled="busy"
-            label="IONOS Nat Gateway Rule Target Subnet"
-          />
-          <p class="help-block">String. The Target Subnet of the new Nat Gateway Rule.</p>
-        </div>
-        <div class="col span-3">
-          <LabeledInput
-            v-model="natRuleTargetPortRangeStart"
-            :mode="mode"
-            :disabled="busy"
-            label="IONOS Nat Gateway Rule Port Range Start"
-          />
-          <p class="help-block">Integer. The Port Range Start of the new Nat Gateway Rule.</p>
-        </div>
-        <div class="col span-3">
-          <LabeledInput
-            v-model="natRuleTargetPortRangeEnd"
-            :mode="mode"
-            :disabled="busy"
-            label="IONOS Nat Gateway Rule Port Range End"
-          />
-          <p class="help-block">Integer. The Port Range End of the new Nat Gateway Rule.</p>
-        </div>
-      </div>
-      <div v-if="createNat === true">
-        <button @click="addNatRule()">
-          Add NAT Gateway Rule +
-        </button>
       </div>
     </div>
   </div>
@@ -1052,6 +1100,10 @@ export default {
     margin-top: .5em;
     font-size: .8em;
     margin-left: 1em;
+  }
+
+  .create-nat {
+    flex-direction: column;
   }
 
   .ionoscloud-config {
