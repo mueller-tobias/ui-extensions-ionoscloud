@@ -521,7 +521,7 @@ export default {
       let splitRule = rule.split(':') 
       if (splitRule.length != 8) {
         alert("Invalid entry detected: " + rule + ". The accepted format is " +
-        "name:type:protocol:source_subnet:target_subnet:target_port_range_start:target_port_range_end:public_ip!");
+        "name:type:protocol:public_ip:source_subnet:target_subnet:target_port_range_start:target_port_range_end!");
         return false;
       }
       if (!['SNAT'].includes(splitRule[1])) {
