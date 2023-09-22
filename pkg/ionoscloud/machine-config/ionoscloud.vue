@@ -569,11 +569,11 @@ export default {
         alert("Invalid Subnet detected: " + splitRule[5] );
         return false;
       }
-      if (splitRule[6] && Number.isNaN(parseInt(splitRule[6]))) {
+      if (splitRule[6] && (!Number.isInteger(Number(splitRule[6])) || Number(splitRule[6]) < 0)) {
         alert("Invalid Port detected: " + splitRule[6] );
         return false;
       }
-      if (splitRule[7] && Number.isNaN(parseInt(splitRule[7]))) {
+      if (splitRule[7] && (!Number.isInteger(Number(splitRule[7])) || Number(splitRule[7]) < 0)) {
         alert("Invalid Port detected: " + splitRule[7] );
         return false;
       }
@@ -584,7 +584,7 @@ export default {
     onChangeNatRules(event) {
       for (let rule of event) {
         if (!this.checkNatRule(rule)) {
-          return;
+          return false;
         }
       }
       this.natRules = event.sort();
