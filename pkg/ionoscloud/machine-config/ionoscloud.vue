@@ -366,6 +366,31 @@ export default {
   },
 
   data() {
+    const defaultNatRules = [
+      'rule01:SNAT:TCP::::22:22',
+      'rule02:SNAT:UDP::::53:53',
+      'rule03:SNAT:TCP::::80:80',
+      'rule04:SNAT:TCP::::179:179',
+      'rule05:SNAT:TCP::::443:443',
+      'rule06:SNAT:TCP::::2376:2376',
+      'rule07:SNAT:UDP::::4789:4789',
+      'rule08:SNAT:TCP::::6443:6443',
+      'rule09:SNAT:TCP::::6783:6783',
+      'rule10:SNAT:TCP::::8443:8443',
+      'rule11:SNAT:UDP::::8472:8472',
+      'rule12:SNAT:TCP::::9099:9099',
+      'rule13:SNAT:TCP::::9100:9100',
+      'rule14:SNAT:TCP::::9443:9443',
+      'rule15:SNAT:TCP::::9796:9796',
+      'rule16:SNAT:TCP::::10254:10254',
+      'rule17:SNAT:TCP::::10256:10256',
+      'rule18:SNAT:TCP::::2379:2380',
+      'rule19:SNAT:UDP::::6783:6784',
+      'rule20:SNAT:TCP::::10250:10252',
+      'rule21:SNAT:TCP::::30000:32767',
+      'rule22:SNAT:UDP::::30000:32767',
+      'rule23:SNAT:ALL::::0:0',
+    ]
     return {
       authenticating:              false,
       ready:                       false,
@@ -399,10 +424,10 @@ export default {
       natId:                       this.value?.natId,
       natName:                     this.value?.natName || 'docker-machine-nat',
       createNat:                   this.value?.createNat || false,
-      natLansToGateways:           this.value?.natLansToGateways || [],
+      natLansToGateways:           this.getNatLansToGateways(this.value?.natLansToGateways) || [],
       natFlowlogs:                 this.value?.natFlowlogs || [],
       natPublicIps:                this.value?.natPublicIps || [],
-      natRules:                    this.value?.natRules || [],
+      natRules:                    this.mode == 'create' ? defaultNatRules : this.value?.natRules || [],
       natRuleName:                 '',
       natRuleType:                 'SNAT',
       natRuleProtocol:             initNatRuleProtocol(),
@@ -536,7 +561,7 @@ export default {
         alert("Invalid IP detected: " + splitRule[3] );
         return false;
       }
-      if (!validateSubnet(splitRule[4])) {
+      if (splitRule[4] && !validateSubnet(splitRule[4])) {
         alert("Invalid Subnet detected: " + splitRule[4] );
         return false;
       }
@@ -590,6 +615,7 @@ export default {
       this.$emit('validationChanged', true);
     },
 
+    // Sets `value.natLansToGateways` to a map of LANs to Gateways interpretable by Docker Machine Driver: like 1=10.0.0.1,10.0.0.2:2=10.0.0.10
     formatNatLansToGateways() {
       let aux = {}
       for (let el of this.natLansToGateways) {
@@ -609,6 +635,23 @@ export default {
       }
 
       return formatedValues.join(':')
+    },
+
+    getNatLansToGateways(stringValue) {
+      if (!stringValue) {
+        return undefined
+      }
+
+      let arr = [], spl
+
+      for (let el of stringValue.split(':')) {
+        spl = el.split('=')
+        for (let ip of spl[1].split(',')) {
+          arr.push(`${spl[0]}:${ip}`)
+        }
+      }
+
+      return arr
     },
 
     syncValue() {
@@ -1056,7 +1099,7 @@ export default {
               :disabled="busy"
               label="IONOS Nat Gateway Rule Source Subnet"
             />
-            <p class="help-block">String. The Source Subnet of the new Nat Gateway Rule.</p>
+            <p class="help-block">String. The Source Subnet of the new Nat Gateway Rule, leave black and the driver will use the first ip on the nic with mask 24.</p>
           </div>
           <div class="col span-3">
             <LabeledInput
