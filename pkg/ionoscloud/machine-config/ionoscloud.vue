@@ -389,7 +389,7 @@ export default {
       'rule20:SNAT:TCP::::10250:10252',
       'rule21:SNAT:TCP::::30000:32767',
       'rule22:SNAT:UDP::::30000:32767',
-      'rule23:SNAT:ALL::::0:0',
+      'rule23:SNAT:ALL:::::',
     ]
     return {
       authenticating:              false,
@@ -689,6 +689,7 @@ export default {
       this.value.natFlowlogs = this.natFlowlogs;
       this.value.natPublicIps = this.natPublicIps;
       this.value.natRules = this.natRules;
+      this.value.skipDefaultNatRules = true;
     },
 
     test() {
