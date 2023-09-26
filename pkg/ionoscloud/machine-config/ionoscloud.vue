@@ -13,187 +13,278 @@ import FileSelector from '../components/FileSelector';
 
 import { LabeledTooltip } from '@rancher/components';
 
-function initLocation() {
+function initLocation(initialValue) {
+  let select_options = [
+    {
+      label: 'Las Vegas, USA',
+      value: {'value': 'us/las', 'name': 'Las Vegas, USA'}
+    },
+    {
+      label:'Newark, USA',
+      value: {'value': 'us/ewr', 'name':'Newark, USA'}
+    },
+    {
+      label: 'Frankfurt, Germany',
+      value: {'value': 'de/fra', 'name': 'Frankfurt, Germany'}
+    },
+    {
+      label: 'Berlin, Germany',
+      value: {'value': 'de/txl', 'name': 'Berlin, Germany'}
+    },
+    {
+      label: 'London, UK',
+      value: {'value': 'gb/lhr', 'name': 'London, UK'}
+    },
+    {
+      label: 'Logroño, Spain',
+      value: {'value': 'es/vit', 'name': 'Logroño, Spain'}
+    },
+    {
+      label: 'Paris, France',
+      value: {'value': 'fr/par', 'name': 'Paris, France'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'Las Vegas, USA',
-        value: {'value': 'us/las', 'name': 'Las Vegas, USA'}
-      },
-      {
-        label:'Newark, USA',
-        value: {'value': 'us/ewr', 'name':'Newark, USA'}
-      },
-      {
-        label: 'Frankfurt, Germany',
-        value: {'value': 'de/fra', 'name': 'Frankfurt, Germany'}
-      },
-      {
-        label: 'Berlin, Germany',
-        value: {'value': 'de/txl', 'name': 'Berlin, Germany'}
-      },
-      {
-        label: 'London, UK',
-        value: {'value': 'gb/lhr', 'name': 'London, UK'}
-      },
-      {
-        label: 'Logroño, Spain',
-        value: {'value': 'es/vit', 'name': 'Logroño, Spain'}
-      },
-      {
-        label: 'Paris, France',
-        value: {'value': 'fr/par', 'name': 'Paris, France'}
-      },
-    ],
-    selected: {'value': 'us/las', 'name': 'Las Vegas, USA'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initServerType() {
+function initServerType(initialValue) {
+  let select_options = [
+    {
+      label: 'Enterprise',
+      value: {'value': 'ENTERPRISE', 'name': 'Enterprise'}
+    },
+    {
+      label:'Cube',
+      value: {'value': 'CUBE', 'name':'Cube'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'Enterprise',
-        value: {'value': 'ENTERPRISE', 'name': 'Enterprise'}
-      },
-      {
-        label:'Cube',
-        value: {'value': 'CUBE', 'name':'Cube'}
-      },
-    ],
-    selected: {'value': 'ENTERPRISE', 'name': 'Enterprise'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initServerZone() {
+function initserverAvailabilityZone(initialValue) {
+  let select_options = [
+    {
+      label: 'AUTO',
+      value: {'value': 'AUTO', 'name': 'AUTO'}
+    },
+    {
+      label:'ZONE_1',
+      value: {'value': 'ZONE_1', 'name':'ZONE_1'}
+    },
+    {
+      label:'ZONE_2',
+      value: {'value': 'ZONE_2', 'name':'ZONE_2'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'AUTO',
-        value: {'value': 'AUTO', 'name': 'AUTO'}
-      },
-      {
-        label:'ZONE_1',
-        value: {'value': 'ZONE_1', 'name':'ZONE_1'}
-      },
-      {
-        label:'ZONE_2',
-        value: {'value': 'ZONE_2', 'name':'ZONE_2'}
-      },
-    ],
-    selected: {'value': 'AUTO', 'name': 'AUTO'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initTemplate() {
+function initTemplate(initialValue) {
+  let select_options = [
+    {
+      label: 'XS',
+      value: {'value': 'CUBES XS', 'name': 'XS'}
+    },
+    {
+      label: 'S',
+      value: {'value': 'CUBES S', 'name': 'S'}
+    },
+    {
+      label: 'M',
+      value: {'value': 'CUBES M', 'name': 'M'}
+    },
+    {
+      label: 'L',
+      value: {'value': 'CUBES L', 'name': 'L'}
+    },
+    {
+      label: 'XL',
+      value: {'value': 'CUBES XL', 'name': 'XL'}
+    },
+    {
+      label: 'XXL',
+      value: {'value': 'CUBES XXL', 'name': 'XXL'}
+    },
+    {
+      label: '3XL',
+      value: {'value': 'CUBES 3XL', 'name': '3XL'}
+    },
+    {
+      label: '4XL',
+      value: {'value': 'CUBES 4XL', 'name': '4XL'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'XS',
-        value: {'value': 'CUBES XS', 'name': 'XS'}
-      },
-      {
-        label: 'S',
-        value: {'value': 'CUBES S', 'name': 'S'}
-      },
-      {
-        label: 'M',
-        value: {'value': 'CUBES M', 'name': 'M'}
-      },
-      {
-        label: 'L',
-        value: {'value': 'CUBES L', 'name': 'L'}
-      },
-      {
-        label: 'XL',
-        value: {'value': 'CUBES XL', 'name': 'XL'}
-      },
-      {
-        label: 'XXL',
-        value: {'value': 'CUBES XXL', 'name': 'XXL'}
-      },
-      {
-        label: '3XL',
-        value: {'value': 'CUBES 3XL', 'name': '3XL'}
-      },
-      {
-        label: '4XL',
-        value: {'value': 'CUBES 4XL', 'name': '4XL'}
-      },
-    ],
-    selected: {'value': 'CUBES XS', 'name': 'XS'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initVolumeZone() {
+function initvolumeAvailabilityZone(initialValue) {
+  let select_options = [
+    {
+      label: 'AUTO',
+      value: {'value': 'AUTO', 'name': 'AUTO'}
+    },
+    {
+      label:'ZONE_1',
+      value: {'value': 'ZONE_1', 'name':'ZONE_1'}
+    },
+    {
+      label:'ZONE_2',
+      value: {'value': 'ZONE_2', 'name':'ZONE_2'}
+    },
+    {
+      label:'ZONE_3',
+      value: {'value': 'ZONE_3', 'name':'ZONE_3'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'AUTO',
-        value: {'value': 'AUTO', 'name': 'AUTO'}
-      },
-      {
-        label:'ZONE_1',
-        value: {'value': 'ZONE_1', 'name':'ZONE_1'}
-      },
-      {
-        label:'ZONE_2',
-        value: {'value': 'ZONE_2', 'name':'ZONE_2'}
-      },
-      {
-        label:'ZONE_3',
-        value: {'value': 'ZONE_3', 'name':'ZONE_3'}
-      },
-    ],
-    selected: {'value': 'AUTO', 'name': 'AUTO'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initCpuFamily() {
+function initCpuFamily(initialValue) {
+  let select_options = [
+    {
+      label: 'Intel XEON (USA)',
+      value: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'}
+    },
+    {
+      label: 'Intel SKYLAKE (Europe)',
+      value: {'value': 'INTEL_SKYLAKE', 'name': 'Intel SKYLAKE (Europe)'}
+    },
+    {
+      label: 'AMD OPTERON (USA)',
+      value: {'value': 'AMD_OPTERON', 'name': 'AMD OPTERON (USA)'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'Intel SKYLAKE (Europe)',
-        value: {'value': 'INTEL_SKYLAKE', 'name': 'Intel SKYLAKE (Europe)'}
-      },
-      {
-        label: 'AMD OPTERON (USA)',
-        value: {'value': 'AMD_OPTERON', 'name': 'AMD OPTERON (USA)'}
-      },
-      {
-        label: 'Intel XEON (USA)',
-        value: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'}
-      },
-    ],
-    selected: {'value': 'INTEL_XEON', 'name': 'Intel XEON (USA)'},
+    options: select_options,
+    selected: selected_option,
     busy:     false,
     enabled:  false,
   };
 }
 
-function initDiskType() {
+function initDiskType(initialValue) {
+  let select_options = [
+    {
+      label: 'HDD',
+      value: {'value': 'HDD', 'name': 'HDD'}
+    },
+    {
+      label: 'SSD',
+      value: {'value': 'SSD', 'name': 'SSD'}
+    },
+  ]
+  let selected_option = select_options[0].value
+
+  select_options.forEach(element => {
+    if (element.value.value == initialValue) {
+      selected_option = element.value
+    }
+  }); 
+  
   return {
-    options:  [
-      {
-        label: 'HDD',
-        value: {'value': 'HDD', 'name': 'HDD'}
-      },
-      {
-        label: 'SSD',
-        value: {'value': 'SSD', 'name': 'SSD'}
-      },
-    ],
-    selected: {'value': 'HDD', 'name': 'HDD'},
+    options: select_options,
+    selected: selected_option,
+    busy:     false,
+    enabled:  false,
+  };
+}
+
+function initNatRuleProtocol() {
+  let select_options = [
+    {
+      label: 'ALL',
+      value: {'value': 'ALL', 'name': 'ALL'}
+    },
+    {
+      label: 'TCP',
+      value: {'value': 'TCP', 'name': 'TCP'}
+    },
+    {
+      label: 'UDP',
+      value: {'value': 'UDP', 'name': 'UDP'}
+    },
+    {
+      label: 'ICMP',
+      value: {'value': 'ICMP', 'name': 'ICMP'}
+    },
+  ]
+  
+  return {
+    options: select_options,
+    selected: select_options[0].value,
     busy:     false,
     enabled:  false,
   };
@@ -204,6 +295,11 @@ function validateIp(ip) {
     return true;
   }
   return false;
+}
+
+function validateSubnet(subnet) {
+  let splitSubnet = subnet.split('/')
+  return (splitSubnet.length == 2 && validateIp(splitSubnet[0]) && !(Number.isNaN(parseInt(splitSubnet[1]))))
 }
 
 
@@ -270,42 +366,77 @@ export default {
   },
 
   data() {
+    const defaultNatRules = [
+      'rule01:SNAT:TCP::::22:22',
+      'rule02:SNAT:UDP::::53:53',
+      'rule03:SNAT:TCP::::80:80',
+      'rule04:SNAT:TCP::::179:179',
+      'rule05:SNAT:TCP::::443:443',
+      'rule06:SNAT:TCP::::2376:2376',
+      'rule07:SNAT:UDP::::4789:4789',
+      'rule08:SNAT:TCP::::6443:6443',
+      'rule09:SNAT:TCP::::6783:6783',
+      'rule10:SNAT:TCP::::8443:8443',
+      'rule11:SNAT:UDP::::8472:8472',
+      'rule12:SNAT:TCP::::9099:9099',
+      'rule13:SNAT:TCP::::9100:9100',
+      'rule14:SNAT:TCP::::9443:9443',
+      'rule15:SNAT:TCP::::9796:9796',
+      'rule16:SNAT:TCP::::10254:10254',
+      'rule17:SNAT:TCP::::10256:10256',
+      'rule18:SNAT:TCP::::2379:2380',
+      'rule19:SNAT:UDP::::6783:6784',
+      'rule20:SNAT:TCP::::10250:10252',
+      'rule21:SNAT:TCP::::30000:32767',
+      'rule22:SNAT:UDP::::30000:32767',
+      'rule23:SNAT:ALL:::::',
+    ]
     return {
-      authenticating:          false,
-      ready:                   false,
-      os:                      null,
-      password:                null,
-      havePassword:            false,
-      location:                initLocation(),
-      serverType:              initServerType(),
-      template:                initTemplate(),
-      serverZone:              initServerZone(),
-      volumeZone:              initVolumeZone(),
-      cpuFamily:               initCpuFamily(),
-      diskType:                initDiskType(),
-      cores:                   this.value?.cores || '2',
-      ram:                     this.value?.ram || '2048',
-      diskSize:                this.value?.diskSize || '50',
-      image:                   this.value?.image || 'ubuntu:20.04',
-      imagePassword:           this.value?.imagePassword,
-      cloudInit:                this.value?.cloudInit,
-      sshUser:                 this.value?.sshUser || 'root',
-      sshInCloudInit:           this.value?.sshInCloudInit || false,
-      datacenterId:            this.value?.datacenterId,
-      datacenterName:          this.value?.datacenterName || 'docker-machine-data-center',
-      lanId:                   this.value?.lanId,
-      lanName:                 this.value?.lanName || 'docker-machine-lan',
-      privateLan:              this.value?.privateLan || false,
-      nicDhcp:                 this.value?.nicDhcp || false,
-      nicIps:                  this.value?.nicIps || [],
-      waitForIpChange:         this.value?.waitForIpChange || false,
-      waitForIpChangeTimeout:  this.value?.waitForIpChangeTimeout || '600',
-      natId:                   this.value?.natId,
-      natName:                 this.value?.natName || 'docker-machine-nat',
-      createNat:               this.value?.createNat || false,
-      natLansToGateways:       this.value?.natLansToGateways || [],
-      natPublicIps:            this.value?.natPublicIps || [],
-      errors:                  null,
+      authenticating:              false,
+      ready:                       false,
+      os:                          null,
+      password:                    null,
+      havePassword:                false,
+      location:                    initLocation(this.value?.location || 'us/las'),
+      serverType:                  initServerType(this.value?.serverType || 'ENTERPRISE'),
+      template:                    initTemplate(this.value?.template || 'CUBES XS'),
+      serverAvailabilityZone:      initserverAvailabilityZone(this.value?.serverAvailabilityZone || 'AUTO'),
+      volumeAvailabilityZone:      initvolumeAvailabilityZone(this.value?.volumeAvailabilityZone || 'AUTO'),
+      cpuFamily:                   initCpuFamily(this.value?.cpuFamily || 'INTEL_XEON'),
+      diskType:                    initDiskType(this.value?.diskType || 'HDD'),
+      cores:                       this.value?.cores || '2',
+      ram:                         this.value?.ram || '2048',
+      diskSize:                    this.value?.diskSize || '50',
+      image:                       this.value?.image || 'ubuntu:20.04',
+      imagePassword:               this.value?.imagePassword,
+      cloudInit:                   this.value?.cloudInit,
+      sshUser:                     this.value?.sshUser || 'root',
+      sshInCloudInit:              this.value?.sshInCloudInit || false,
+      datacenterId:                this.value?.datacenterId,
+      datacenterName:              this.value?.datacenterName || 'docker-machine-data-center',
+      lanId:                       this.value?.lanId,
+      lanName:                     this.value?.lanName || 'docker-machine-lan',
+      privateLan:                  this.value?.privateLan || false,
+      nicDhcp:                     this.value?.nicDhcp || false,
+      nicIps:                      this.value?.nicIps || [],
+      waitForIpChange:             this.value?.waitForIpChange || false,
+      waitForIpChangeTimeout:      this.value?.waitForIpChangeTimeout || '600',
+      natId:                       this.value?.natId,
+      natName:                     this.value?.natName || 'docker-machine-nat',
+      createNat:                   this.value?.createNat || false,
+      natLansToGateways:           this.getNatLansToGateways(this.value?.natLansToGateways) || [],
+      natFlowlogs:                 this.value?.natFlowlogs || [],
+      natPublicIps:                this.value?.natPublicIps || [],
+      natRules:                    this.mode == 'create' ? defaultNatRules : this.value?.natRules || [],
+      natRuleName:                 '',
+      natRuleType:                 'SNAT',
+      natRuleProtocol:             initNatRuleProtocol(),
+      natRuleSourceSubnet:         '',
+      natRulePublicIp:             '',
+      natRuleTargetSubnet:         '',
+      natRuleTargetPortRangeStart: '',
+      natRuleTargetPortRangeEnd:   '',
+      errors:                      null,
     };
   },
 
@@ -321,8 +452,8 @@ export default {
     initForViewMode() {
       this.fakeSelectOptions(this.Location, this.value?.location);
       this.fakeSelectOptions(this.ServerType, this.value?.serverType);
-      this.fakeSelectOptions(this.ServerZone, this.value?.serverZone);
-      this.fakeSelectOptions(this.VolumeZone, this.value?.volumeZone);
+      this.fakeSelectOptions(this.serverAvailabilityZone, this.value?.serverAvailabilityZone);
+      this.fakeSelectOptions(this.volumeAvailabilityZone, this.value?.volumeAvailabilityZone);
       this.fakeSelectOptions(this.CpuFamily, this.value?.cpuFamily);
       this.fakeSelectOptions(this.DiskType, this.value?.diskType);
     },
@@ -387,6 +518,91 @@ export default {
 
       this.natLansToGateways = event.sort();
     },
+    onChangeNatFlowlogs(event) {
+
+      for (let el of event) {
+        let spl = el.split(':')
+        if (spl.length != 4) {
+          alert("Invalid entry detected: " + el + ". The accepted format is name:action:direction:bucket!");
+          return;
+        }
+        let action = spl[1]
+        if (!["ACCEPTED", "REJECTED", "ALL"].includes(action)) {
+          alert("Invalid action: " + action + ". Must be one of ['ACCEPTED', 'REJECTED', 'ALL']");
+          return;
+        }
+
+        let direction = spl[2]
+        if (!["INGRESS", "EGRESS", "BIDIRECTIONAL"].includes(direction)) {
+          alert("Invalid direction: " + direction + ". Must be one of ['INGRESS', 'EGRESS', 'BIDIRECTIONAL']");
+          return;
+        }
+      }
+
+      this.natFlowlogs = event.sort();
+    },
+
+    checkNatRule(rule) {
+      let splitRule = rule.split(':') 
+      if (splitRule.length != 8) {
+        alert("Invalid entry detected: " + rule + ". The accepted format is " +
+        "name:type:protocol:public_ip:source_subnet:target_subnet:target_port_range_start:target_port_range_end!");
+        return false;
+      }
+      if (!['SNAT'].includes(splitRule[1])) {
+        alert("Invalid rule type: " + splitRule[1] + ". Must be one of ['SNAT']");
+        return false;
+      }
+      if (!['TCP', 'UDP', 'ICMP', 'ALL'].includes(splitRule[2])) {
+        alert("Invalid rule protocol: " + splitRule[2] + ". Must be one of ['TCP', 'UDP', 'ICMP', 'ALL']");
+        return false;
+      }
+      if (splitRule[3] && !validateIp(splitRule[3])) {
+        alert("Invalid IP detected: " + splitRule[3] );
+        return false;
+      }
+      if (splitRule[4] && !validateSubnet(splitRule[4])) {
+        alert("Invalid Subnet detected: " + splitRule[4] );
+        return false;
+      }
+      if (splitRule[5] && !validateSubnet(splitRule[5])) {
+        alert("Invalid Subnet detected: " + splitRule[5] );
+        return false;
+      }
+      if (splitRule[6] && (!Number.isInteger(Number(splitRule[6])) || Number(splitRule[6]) < 0)) {
+        alert("Invalid Port detected: " + splitRule[6] );
+        return false;
+      }
+      if (splitRule[7] && (!Number.isInteger(Number(splitRule[7])) || Number(splitRule[7]) < 0)) {
+        alert("Invalid Port detected: " + splitRule[7] );
+        return false;
+      }
+
+      return true
+    },
+
+    onChangeNatRules(event) {
+      for (let rule of event) {
+        if (!this.checkNatRule(rule)) {
+          return false;
+        }
+      }
+      this.natRules = event.sort();
+    },
+
+    addNatRule() {
+      let rule = [
+        this.natRuleName, this.natRuleType, this.natRuleProtocol.selected.value, this.natRulePublicIp, this.natRuleSourceSubnet,
+        this.natRuleTargetSubnet, this.natRuleTargetPortRangeStart, this.natRuleTargetPortRangeEnd
+      ].join(':')
+      if (this.natRules.includes(rule)) {
+        alert("Rule is already in list!");
+        return;
+      }
+      if (this.checkNatRule(rule)) {
+        this.natRules.push(rule)
+      }
+    },
 
     onPrivateKeyFileSelected(v) {
       this.filename = v.file.name;
@@ -399,6 +615,7 @@ export default {
       this.$emit('validationChanged', true);
     },
 
+    // Sets `value.natLansToGateways` to a map of LANs to Gateways interpretable by Docker Machine Driver: like 1=10.0.0.1,10.0.0.2:2=10.0.0.10
     formatNatLansToGateways() {
       let aux = {}
       for (let el of this.natLansToGateways) {
@@ -420,15 +637,32 @@ export default {
       return formatedValues.join(':')
     },
 
+    getNatLansToGateways(stringValue) {
+      if (!stringValue) {
+        return undefined
+      }
+
+      let arr = [], spl
+
+      for (let el of stringValue.split(':')) {
+        spl = el.split('=')
+        for (let ip of spl[1].split(',')) {
+          arr.push(`${spl[0]}:${ip}`)
+        }
+      }
+
+      return arr
+    },
+
     syncValue() {
       // Note: We don't need to provide password as this is picked up via the credential
 
       // Copy the values from the form to the correct places on the value
       this.value.location = this.location.selected?.value;
       this.value.serverType = this.serverType.selected?.value;
-      this.value.serverZone = this.serverZone.selected?.value;
+      this.value.serverAvailabilityZone = this.serverAvailabilityZone.selected?.value;
       this.value.template = this.template.selected?.value;
-      this.value.volumeZone = this.volumeZone.selected?.value;
+      this.value.volumeAvailabilityZone = this.volumeAvailabilityZone.selected?.value;
       this.value.cpuFamily = this.cpuFamily.selected?.value;
       this.value.diskType = this.diskType.selected?.value;
       this.value.cores = this.cores;
@@ -452,7 +686,10 @@ export default {
       this.value.natName = this.natName;
       this.value.createNat = this.createNat;
       this.value.natLansToGateways = this.formatNatLansToGateways();
+      this.value.natFlowlogs = this.natFlowlogs;
       this.value.natPublicIps = this.natPublicIps;
+      this.value.natRules = this.natRules;
+      this.value.skipDefaultNatRules = true;
     },
 
     test() {
@@ -506,19 +743,19 @@ export default {
         </div>
         <div class="col span-3" v-if="serverType.selected.value === 'ENTERPRISE'">
           <LabeledSelect
-            v-model="serverZone.selected"
-            label="ServerZone"
-            :options="serverZone.options"
-            :loading="serverZone.busy"
+            v-model="serverAvailabilityZone.selected"
+            label="serverAvailabilityZone"
+            :options="serverAvailabilityZone.options"
+            :loading="serverAvailabilityZone.busy"
             :searchable="false"
           />
         </div>
         <div class="col span-3" v-if="serverType.selected.value === 'ENTERPRISE'">
           <LabeledSelect
-            v-model="volumeZone.selected"
-            label="VolumeZone"
-            :options="volumeZone.options"
-            :loading="volumeZone.busy"
+            v-model="volumeAvailabilityZone.selected"
+            label="volumeAvailabilityZone"
+            :options="volumeAvailabilityZone.options"
+            :loading="volumeAvailabilityZone.busy"
             :searchable="false"
           />
         </div>
@@ -767,7 +1004,7 @@ export default {
         </div>
       </div>
 
-      <div class="row mt-10">
+      <div class="row mt-10" v-if="createNat === true">
         <div class="col span-4">
           <StringList
             label="Custom NAT: map LANs to Gateway IPs"
@@ -790,6 +1027,114 @@ export default {
           />
           <p class="help-block">Optional. IPBlock reserved IPs. If not set, the driver will reserve an IPBlock automatically</p>
         </div>
+        <div class="col span-4">
+          <StringList
+            label="Custom NAT: Flowlogs"
+            v-model="natFlowlogs"
+            :items="natFlowlogs"
+            :mode="mode"
+            :disabled="busy"
+            @change="onChangeNatFlowlogs($event)"
+          />
+          <p class="help-block">Optional. NAT Flowlogs.</p>
+        </div>
+      </div>
+
+      <div class="row mt-10" v-if="createNat === true">
+        <div class="col span-6">
+          <StringList
+            label="Custom NAT: Rules"
+            v-model="natRules"
+            :items="natRules"
+            :mode="mode"
+            :disabled="busy"
+            @change="onChangeNatRules($event)"
+          />
+          <p class="help-block">Optional. NAT Rules. Use the form bellow to add a new NAT rule</p>
+        </div>
+      </div>
+      <div class="card-container create-nat" v-if="createNat">
+        <div class="row mt-10">
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleName"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Name"
+            />
+            <p class="help-block">String. The name of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+              <LabeledInput
+                v-model="natRuleType"
+                :mode="mode"
+                :disabled="busy"
+                label="IONOS Nat Gateway Rule Type"
+              />
+            <p class="help-block">String. The type of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledSelect
+              v-model="natRuleProtocol.selected"
+              label="natRuleProtocol"
+              :options="natRuleProtocol.options"
+              :loading="natRuleProtocol.busy"
+              :searchable="false"
+            />
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRulePublicIp"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Public IP"
+            />
+            <p class="help-block">String. The Public IP of the new Nat Gateway Rule, leave black and the driver will use the nat gateway IP.</p>
+          </div>
+        </div>
+        <div class="row mt-10">
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleSourceSubnet"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Source Subnet"
+            />
+            <p class="help-block">String. The Source Subnet of the new Nat Gateway Rule, leave black and the driver will use the first ip on the nic with mask 24.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetSubnet"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Target Subnet"
+            />
+            <p class="help-block">String. The Target Subnet of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetPortRangeStart"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Port Range Start"
+            />
+            <p class="help-block">Integer. The Port Range Start of the new Nat Gateway Rule.</p>
+          </div>
+          <div class="col span-3">
+            <LabeledInput
+              v-model="natRuleTargetPortRangeEnd"
+              :mode="mode"
+              :disabled="busy"
+              label="IONOS Nat Gateway Rule Port Range End"
+            />
+            <p class="help-block">Integer. The Port Range End of the new Nat Gateway Rule.</p>
+          </div>
+        </div>
+        <div class="mt-10">
+          <button @click="addNatRule()">
+            Add NAT Gateway Rule +
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -799,6 +1144,10 @@ export default {
     margin-top: .5em;
     font-size: .8em;
     margin-left: 1em;
+  }
+
+  .create-nat {
+    flex-direction: column;
   }
 
   .ionoscloud-config {
