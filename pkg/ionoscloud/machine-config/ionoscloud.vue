@@ -848,6 +848,7 @@ export default {
         <div class="col span-12">
           <label class="acc-label">Cloud init configuration.</label>
           <textarea
+            @keydown.enter="cloudInit = cloudInit + '\n'"
             v-model="cloudInit"
             :mode="mode"
             :disabled="busy"
