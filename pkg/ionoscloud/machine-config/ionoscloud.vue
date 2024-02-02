@@ -419,6 +419,7 @@ export default {
       privateLan:                  this.value?.privateLan || false,
       nicDhcp:                     this.value?.nicDhcp || false,
       nicIps:                      this.value?.nicIps || [],
+      additionalLans:              this.value?.additionalLans || [],
       waitForIpChange:             this.value?.waitForIpChange || false,
       waitForIpChangeTimeout:      this.value?.waitForIpChangeTimeout || '600',
       natId:                       this.value?.natId,
@@ -482,6 +483,10 @@ export default {
       }
 
       this.nicIps = event;
+    },
+
+    onChangeAdditionalLans(event) {
+      this.additionalLans = event;
     },
 
     onChangeNatPublicIps(event) {
@@ -680,6 +685,7 @@ export default {
       this.value.privateLan = this.privateLan;
       this.value.nicDhcp = this.nicDhcp;
       this.value.nicIps = this.nicIps;
+      this.value.additionalLans = this.additionalLans;
       this.value.waitForIpChange = this.waitForIpChange;
       this.value.waitForIpChangeTimeout = this.waitForIpChangeTimeout;
       this.value.natId = this.natId;
@@ -930,7 +936,19 @@ export default {
           <p class="help-block">If the default LAN does not exist, create a private LAN</p>
         </div>
       </div>
-
+      <div class="row mt-10">
+        <div class="col span-4">
+          <StringList
+            label="Additional LANs"
+            v-model="additionalLans"
+            :items="additionalLans"
+            :mode="mode"
+            :disabled="busy"
+            @change="onChangeAdditionalLans($event)"
+          />
+          <p class="help-block">Optional. Exiting Ionos LAN names. Every LAN in the datacenter which has its name in this list will be connected to the server, names which are not found will be ignored.</p>
+        </div>
+      </div>
       <div class="row mt-10">
         <div class="col span-4">
           <Checkbox
