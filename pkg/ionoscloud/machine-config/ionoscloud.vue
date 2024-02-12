@@ -363,10 +363,6 @@ export default {
     this.$emit('validationChanged', true);
   },
 
-  mounted() {
-    this.textarea = this.$refs.ta
-  },
-
   data() {
     const defaultNatRules = [
       'rule01:SNAT:TCP::::22:22',
@@ -439,8 +435,6 @@ export default {
       natRuleTargetPortRangeStart: '',
       natRuleTargetPortRangeEnd:   '',
       errors:                      null,
-      textarea:                    "",
-      oldPosition:                 0,
     };
   },
 
@@ -854,15 +848,6 @@ export default {
         <div class="col span-12">
           <label class="acc-label">Cloud init configuration.</label>
           <textarea
-            ref="ta"
-            @keydown.enter="
-              let ss = textarea.selectionStart
-              cloudInit = cloudInit.substring(0, ss) + '\n' + cloudInit.substring(ss, cloudInit.length)
-              oldPosition = ss + 1
-            "
-            @keyup.enter="
-              textarea.setSelectionRange(oldPosition, oldPosition);
-            "
             v-model="cloudInit"
             :disabled="busy || mode === _VIEW"
           ></textarea>
