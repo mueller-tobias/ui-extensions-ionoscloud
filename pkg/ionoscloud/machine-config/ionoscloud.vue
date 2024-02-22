@@ -224,7 +224,7 @@ function initCpuFamily(initialValue) {
     },
     {
       label: 'AMD EPYC',
-      value: {'value': 'AMD_EPYC,', 'name': 'AMD EPYC'}
+      value: {'value': 'AMD_EPYC', 'name': 'AMD EPYC'}
     },
   ]
   let selected_option = select_options[0].value
