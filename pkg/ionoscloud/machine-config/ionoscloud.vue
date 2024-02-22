@@ -218,6 +218,14 @@ function initCpuFamily(initialValue) {
       label: 'AMD OPTERON (USA)',
       value: {'value': 'AMD_OPTERON', 'name': 'AMD OPTERON (USA)'}
     },
+    {
+      label: 'INTEL ICELAKE (Europe)',
+      value: {'value': 'INTEL_ICELAKE', 'name': 'INTEL ICELAKE (Europe)'}
+    },
+    {
+      label: 'AMD EPYC',
+      value: {'value': 'AMD_EPYC', 'name': 'AMD EPYC'}
+    },
   ]
   let selected_option = select_options[0].value
 
