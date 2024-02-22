@@ -6,7 +6,6 @@ import LabeledSelect from '@shell/components/form/LabeledSelect';
 import { LabeledInput } from '@components/Form/LabeledInput';
 import { Checkbox } from '@components/Form/Checkbox';
 import { StringList } from '@components/StringList';
-import { TextArea } from '@components/Form/TextArea';
 import { stringify } from '@shell/utils/error';
 import { _VIEW } from '@shell/config/query-params';
 import FileSelector from '../components/FileSelector';
@@ -320,7 +319,6 @@ export default {
     StringList,
     LabeledInput,
     LabeledSelect,
-    TextArea,
     LabeledTooltip
 },
 
@@ -857,12 +855,10 @@ export default {
       <div class="row mt-10">
         <div class="col span-12">
           <label class="acc-label">Cloud init configuration.</label>
-          <TextArea
+          <textarea
             v-model="cloudInit"
-            :mode="mode"
-            :disabled="busy"
-            @input="cloudInit=$event.target.value;"
-          ></TextArea>
+            :disabled="busy || mode === _VIEW"
+          ></textarea>
           <p class="help-block">Optional. <a href="https://cloudinit.readthedocs.io/en/latest/topics/examples.html" target="_blank" rel="noopener noreferrer">Cloud-init Documentation</a>.</p>
         </div>
       </div>
